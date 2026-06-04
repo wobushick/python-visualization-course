@@ -1,0 +1,12 @@
+name: viz-course
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - gradio>=4.0.0
+      - pandas>=2.0.0
+      - openai>=1.0.0
+      - python-dotenv>=1.0.0
+      - openpyxl>=3.0.0

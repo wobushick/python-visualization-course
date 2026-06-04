@@ -1,0 +1,17 @@
+# 密钥文件 — 绝对不能提交到 git
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+
+# 生成的文件
+output/
+*.xlsx
+
+# IDE
+.vscode/
+.idea/
+
+# Claude Code 本地配置
+.claude/
