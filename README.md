@@ -1,19 +1,26 @@
-# 基于 LLM 协同辅助自动化测试 — 用户注册测试用例生成器
+# 基于 LLM 协同辅助自动化测试 — 登录测试用例生成器
 
-基于 DeepSeek API + Gradio 构建，自动生成用户注册功能的结构化测试用例，覆盖正常、异常、边界值场景，并支持一键执行验证。
+基于 DeepSeek API 自动生成登录功能的结构化测试用例，覆盖正常、异常、边界值场景，并支持 Selenium 自动化测试。
 
 ## 项目结构
 
 ```
-├── docs/                   # 课程文档
+├── docs/                       # 课程文档
 │   ├── miniconda-guide.md
 │   ├── python-environments-explained.md
 │   └── 01_基于LLM协同辅助自动化测试--Deepseek V3(1).md
 ├── test/
-│   ├── app.py              # 主程序：Gradio UI + 用例生成
-│   ├── run_tests.py        # 测试执行器：读取 Excel → 逐条校验
-│   └── .env                # 你的 API Key（不提交到 git）
-├── environment.yml         # Conda 环境配置
+│   ├── day1/                   # Day1: 测试用例生成（命令行）
+│   │   ├── app.py              # 调用 DeepSeek 生成测试用例 → Excel
+│   │   ├── .env                # 你的 API Key（不提交到 git）
+│   │   └── output/             # 生成的测试用例和结果
+│   └── day2/                   # Day2: 登录页面 + Selenium 测试
+│       ├── login_page.py       # 简单登录页面（Gradio）
+│       └── selenium/
+│           ├── conftest.py     # pytest fixtures
+│           ├── test_login.py   # Selenium 测试用例
+│           └── test_results.json  # 测试结果（JSON）
+├── environment.yml             # Conda 环境配置
 ├── .gitignore
 ├── .gitattributes
 └── README.md
@@ -25,6 +32,7 @@
 
 - [Miniconda](https://docs.anaconda.com/miniconda/install/) 已安装
 - [DeepSeek API Key](https://platform.deepseek.com/) 已获取
+- Chrome for Testing（已安装在 `~/tools/chrome-linux64/`）
 
 ### Linux / WSL2
 
@@ -40,12 +48,17 @@ conda env create -f environment.yml
 conda activate viz-course
 
 # 4. 配置 API Key
-cp test/.env.example test/.env
-# 编辑 test/.env，填入你的 DeepSeek API Key
+cp test/day1/.env.example test/day1/.env
+# 编辑 test/day1/.env，填入你的 DeepSeek API Key
 
-# 5. 运行
-python test/app.py
-# 浏览器打开 http://127.0.0.1:7860
+# 5. Day1: 生成测试用例
+python test/day1/app.py
+# → 输出 test/day1/output/testcases.xlsx
+
+# 6. Day2: 运行 Selenium 测试
+python test/day2/login_page.py &
+cd test/day2/selenium
+pytest -v
 ```
 
 ### Windows 11
@@ -66,23 +79,49 @@ conda env create -f environment.yml
 conda activate viz-course
 
 # 5. 配置 API Key（在文件资源管理器中操作或命令行）
-#    复制 test\.env.example 为 test\.env
+#    复制 test\day1\.env.example 为 test\day1\.env
 #    编辑 .env，填入你的 DeepSeek API Key
 
-# 6. 运行
-python test\app.py
-# 浏览器打开 http://127.0.0.1:7860
+# 6. Day1: 生成测试用例
+python test\day1\app.py
+# → 输出 test\day1\output\testcases.xlsx
+
+# 7. Day2: 运行 Selenium 测试
+python test\day2\login_page.py &
+cd test\day2\selenium
+pytest -v
 ```
 
 > **注意**：`.env` 文件包含你的 API Key，已加入 `.gitignore`，不会被提交到 GitHub。每人需要自己在本地创建。
 
 ## 使用说明
 
-1. 打开 `http://127.0.0.1:7860`
-2. 填写各字段格式要求（用户名、邮箱、密码、手机号）
-3. 点击 **🔄 生成测试用例** → LLM 自动生成 20 条测试用例并保存为 Excel
-4. 审阅生成的用例
-5. 点击 **▶️ 执行测试用例** → 对生成的用例逐条验证，输出 PASS/FAIL 结果
+### Day1: 生成测试用例
+
+```bash
+cd test/day1
+python app.py
+```
+
+直接运行脚本，调用 DeepSeek API 生成 20 条登录测试用例，输出：
+- `output/testcases.xlsx` — Excel 格式
+- `output/testcases.md` — Markdown 原文
+
+### Day2: Selenium 自动化测试
+
+1. 启动登录页面：`python test/day2/login_page.py`
+2. 运行 Selenium 测试：`cd test/day2/selenium && pytest -v`
+3. 查看测试结果：`cat test/day2/selenium/test_results.json`
+
+## 测试账号
+
+| 用户名 | 密码 |
+|--------|------|
+| alice | Pass1234 |
+| bob_01 | Abcdef1! |
+| admin | Admin123 |
+| test_user | Test1234 |
+| charlie | Charlie1 |
 
 ## 协作流程
 
@@ -111,7 +150,10 @@ git push origin feature/你的功能名
 A: 确认已激活 viz-course 环境（终端前面有 `(viz-course)`），如果没有：`conda activate viz-course`
 
 **Q: DeepSeek API 返回错误**
-A: 检查 `test/.env` 中的 `DEEPSEEK_API_KEY` 是否正确，以及账户余额是否充足
+A: 检查 `test/day1/.env` 中的 `DEEPSEEK_API_KEY` 是否正确，以及账户余额是否充足
 
 **Q: Windows 上路径找不到**
-A: Windows 路径用 `\` 而非 `/`，如 `python test\app.py`
+A: Windows 路径用 `\` 而非 `/`，如 `python test\day1\app.py`
+
+**Q: Selenium 测试失败**
+A: 确保 Chrome for Testing 已安装在 `~/tools/chrome-linux64/`，且登录页面正在运行

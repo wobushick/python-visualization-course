@@ -144,7 +144,7 @@ which python
 
 # 3. 运行项目
 cd /home/ck/python-visualization-course
-python test/app.py
+python test/day1/app.py
 
 # 4. 搞完退出
 conda deactivate
