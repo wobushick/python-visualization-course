@@ -18,7 +18,7 @@ from selenium.webdriver.support import expected_conditions as EC
 # 登录页面元素定位器
 USERNAME_INPUT = (By.CSS_SELECTOR, "textarea[data-testid='textbox']")
 PASSWORD_INPUT = (By.CSS_SELECTOR, "input[data-testid='password']")
-BTN_LOGIN = (By.XPATH, "//button[contains(., '登录')]")
+BTN_LOGIN = (By.XPATH, "//button[contains(., 'Sign In')]")
 
 
 def get_input_fields(driver):
@@ -276,7 +276,7 @@ class TestBoundary:
 
             status, message = get_output_text(driver)
             # 边界值测试主要验证不崩溃，结果取决于具体逻辑
-            assert status in ["✅ 成功", "❌ 失败"], f"异常状态: {status}"
+            assert "成功" in status or "失败" in status, f"异常状态: {status}"
 
             duration = int((time.time() - start) * 1000)
             result_collector.add(

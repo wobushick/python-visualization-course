@@ -26,7 +26,7 @@ CHROMEDRIVER_PATH = Path.home() / "tools" / "chromedriver-linux64" / "chromedriv
 SCREENSHOTS_DIR = Path(__file__).parent / "screenshots"
 RESULTS_FILE = Path(__file__).parent / "test_results.json"
 APP_DIR = Path(__file__).parent.parent  # day2/
-DEFAULT_PORT = 7861
+DEFAULT_PORT = 7862
 
 
 # ============================================================
