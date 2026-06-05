@@ -9,6 +9,7 @@ import time
 import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
 
 # ============================================================
@@ -21,6 +22,14 @@ PASSWORD_INPUT = (By.CSS_SELECTOR, "input[data-testid='password']")
 BTN_LOGIN = (By.CSS_SELECTOR, "button[type='submit']")
 OUTPUT_STATUS = (By.CSS_SELECTOR, ".output .status")
 OUTPUT_MESSAGE = (By.CSS_SELECTOR, ".output .message")
+
+
+def reset_page(driver):
+    """刷新页面，确保每个测试从干净状态开始。"""
+    driver.refresh()
+    WebDriverWait(driver, 10).until(
+        lambda d: d.find_element("css selector", "input[data-testid='username']")
+    )
 
 
 def fill_fields(driver, username="", password=""):
@@ -57,6 +66,10 @@ def get_output_text(driver):
 
 class TestNormalLogin:
     """正常登录场景。"""
+
+    @pytest.fixture(autouse=True)
+    def _reload(self, driver):
+        reset_page(driver)
 
     @pytest.mark.parametrize("username,password,desc", [
         ("alice", "Pass1234", "alice正常登录"),
@@ -104,6 +117,10 @@ class TestNormalLogin:
 
 class TestUsernameAbnormal:
     """用户名异常场景。"""
+
+    @pytest.fixture(autouse=True)
+    def _reload(self, driver):
+        reset_page(driver)
 
     @pytest.mark.parametrize("username,password,desc", [
         ("ab", "Pass1234", "用户名过短(2位)"),
@@ -154,6 +171,10 @@ class TestUsernameAbnormal:
 class TestPasswordAbnormal:
     """密码异常场景。"""
 
+    @pytest.fixture(autouse=True)
+    def _reload(self, driver):
+        reset_page(driver)
+
     @pytest.mark.parametrize("username,password,desc", [
         ("alice", "Short1", "密码过短(6位)"),
         ("alice", "12345678", "密码纯数字"),
@@ -203,6 +224,10 @@ class TestPasswordAbnormal:
 class TestSecurity:
     """安全测试场景。"""
 
+    @pytest.fixture(autouse=True)
+    def _reload(self, driver):
+        reset_page(driver)
+
     @pytest.mark.parametrize("username,password,desc", [
         ("' OR '1'='1", "Pass1234", "SQL注入_用户名"),
         ("alice", "' OR '1'='1", "SQL注入_密码"),
@@ -249,6 +274,10 @@ class TestSecurity:
 
 class TestBoundary:
     """边界值测试场景。"""
+
+    @pytest.fixture(autouse=True)
+    def _reload(self, driver):
+        reset_page(driver)
 
     @pytest.mark.parametrize("username,password,desc", [
         ("abc", "Pass1234", "用户名最短(3位)"),

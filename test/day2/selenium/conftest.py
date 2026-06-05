@@ -39,8 +39,8 @@ class TestResultCollector:
 
     def __init__(self):
         self.results = []
-        self.start_time = None
-        self.end_time = None
+        self.start_time: str | None = None
+        self.end_time: str | None = None
 
     def add(self, test_id: str, name: str, category: str,
             inputs: dict, status: str, actual_output: str,
@@ -62,7 +62,7 @@ class TestResultCollector:
         data = {
             "test_run": {
                 "timestamp": self.start_time or datetime.now().isoformat(),
-                "environment": "WSL2 + Chrome headless",
+                "environment": "WSL2 + Chrome",
                 "total": len(self.results),
                 "passed": passed,
                 "failed": failed,
@@ -98,33 +98,41 @@ def app_url():
         yield env_url
         return
 
-    # 检查端口是否已被占用
-    import socket
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    port_available = sock.connect_ex(("127.0.0.1", DEFAULT_PORT)) != 0
-    sock.close()
-
-    if not port_available:
-        yield f"http://127.0.0.1:{DEFAULT_PORT}"
-        return
-
-    # 启动 HTTP 服务器，serve 目录为 day2/
+    # 直接绑定端口，绑定失败说明被占用则换端口
     class Day2Handler(http.server.SimpleHTTPRequestHandler):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, directory=str(DAY2_DIR), **kwargs)
 
-    server = http.server.HTTPServer(("127.0.0.1", DEFAULT_PORT), Day2Handler)
+    port = DEFAULT_PORT
+    server = None
+    for port in range(DEFAULT_PORT, DEFAULT_PORT + 10):
+        try:
+            server = http.server.HTTPServer(("127.0.0.1", port), Day2Handler)
+            break
+        except OSError:
+            continue
+
+    if server is None:
+        # 所有端口都被占用，尝试连接已有的
+        import socket
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(2)
+        result = sock.connect_ex(("127.0.0.1", DEFAULT_PORT))
+        sock.close()
+        if result == 0:
+            yield f"http://127.0.0.1:{DEFAULT_PORT}"
+            return
+        raise RuntimeError("无法启动 HTTP 服务器：端口被占用且无法连接")
+
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
-
-    time.sleep(1)
-    yield f"http://127.0.0.1:{DEFAULT_PORT}"
+    yield f"http://127.0.0.1:{port}"
     server.shutdown()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def driver(app_url):
-    """每个测试函数一个独立的浏览器实例。"""
+    """整个测试 session 共享一个浏览器实例。"""
     SCREENSHOTS_DIR.mkdir(exist_ok=True)
 
     options = Options()
@@ -134,15 +142,19 @@ def driver(app_url):
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-default-apps")
+    options.add_argument("--disable-background-networking")
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--lang=zh-CN")
+    options.page_load_strategy = "eager"
 
     service = Service(executable_path=str(CHROMEDRIVER_PATH))
     drv = webdriver.Chrome(service=service, options=options)
     drv.implicitly_wait(5)
 
+    # 首次加载登录页
     drv.get(f"{app_url}/login.html")
-    # 等待页面核心元素加载
     WebDriverWait(drv, 15).until(
         lambda d: d.find_element("css selector", "input[data-testid='username']")
     )
@@ -151,7 +163,7 @@ def driver(app_url):
     drv.quit()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="session")
 def wait(driver):
     """WebDriverWait 封装，默认 10 秒超时。"""
     return WebDriverWait(driver, 10)
