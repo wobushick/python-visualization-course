@@ -1,12 +1,13 @@
 """
 Selenium 测试配置
 ================
-pytest fixtures：浏览器初始化/销毁、Gradio 应用连接、结果收集。
+pytest fixtures：浏览器初始化/销毁、HTTP 服务器、结果收集。
 """
 
+import http.server
 import json
 import os
-import subprocess
+import threading
 import time
 from datetime import datetime
 from pathlib import Path
@@ -25,8 +26,8 @@ CHROME_PATH = Path.home() / "tools" / "chrome-linux64" / "chrome"
 CHROMEDRIVER_PATH = Path.home() / "tools" / "chromedriver-linux64" / "chromedriver"
 SCREENSHOTS_DIR = Path(__file__).parent / "screenshots"
 RESULTS_FILE = Path(__file__).parent / "test_results.json"
-APP_DIR = Path(__file__).parent.parent  # day2/
-DEFAULT_PORT = 7862
+DAY2_DIR = Path(__file__).parent.parent  # day2/
+DEFAULT_PORT = 8080
 
 
 # ============================================================
@@ -90,45 +91,35 @@ def result_collector():
 @pytest.fixture(scope="session")
 def app_url():
     """
-    Gradio 应用地址。
-    如果 APP_URL 环境变量已设置，直接使用；否则尝试启动 login_page.py。
+    启动简易 HTTP 服务器，提供 day2 目录下的 HTML 文件。
     """
     env_url = os.environ.get("APP_URL")
     if env_url:
         yield env_url
         return
 
-    # 尝试连接已有实例
-    import urllib.request
-    try:
-        urllib.request.urlopen(f"http://127.0.0.1:{DEFAULT_PORT}", timeout=2)
+    # 检查端口是否已被占用
+    import socket
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    port_available = sock.connect_ex(("127.0.0.1", DEFAULT_PORT)) != 0
+    sock.close()
+
+    if not port_available:
         yield f"http://127.0.0.1:{DEFAULT_PORT}"
         return
-    except Exception:
-        pass
 
-    # 启动 Gradio 应用
-    proc = subprocess.Popen(
-        ["python", str(APP_DIR / "login_page.py")],
-        cwd=str(APP_DIR),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    # 等待启动
-    for _ in range(30):
-        time.sleep(1)
-        try:
-            urllib.request.urlopen(f"http://127.0.0.1:{DEFAULT_PORT}", timeout=2)
-            break
-        except Exception:
-            continue
-    else:
-        proc.kill()
-        raise RuntimeError("Gradio 应用启动超时")
+    # 启动 HTTP 服务器，serve 目录为 day2/
+    class Day2Handler(http.server.SimpleHTTPRequestHandler):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, directory=str(DAY2_DIR), **kwargs)
 
+    server = http.server.HTTPServer(("127.0.0.1", DEFAULT_PORT), Day2Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+
+    time.sleep(1)
     yield f"http://127.0.0.1:{DEFAULT_PORT}"
-    proc.terminate()
-    proc.wait(timeout=5)
+    server.shutdown()
 
 
 @pytest.fixture(scope="function")
@@ -138,7 +129,8 @@ def driver(app_url):
 
     options = Options()
     options.binary_location = str(CHROME_PATH)
-    options.add_argument("--headless=new")
+    if os.environ.get("HEADLESS"):
+        options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
@@ -149,20 +141,11 @@ def driver(app_url):
     drv = webdriver.Chrome(service=service, options=options)
     drv.implicitly_wait(5)
 
-    drv.get(app_url)
-    # 等待 Gradio 页面核心元素加载（最多重试 3 次）
-    for attempt in range(3):
-        try:
-            WebDriverWait(drv, 20).until(
-                lambda d: len(d.find_elements("css selector", "textarea, input[type='text']")) >= 2
-            )
-            break
-        except Exception:
-            if attempt < 2:
-                drv.refresh()
-                time.sleep(3)
-            else:
-                raise
+    drv.get(f"{app_url}/login.html")
+    # 等待页面核心元素加载
+    WebDriverWait(drv, 15).until(
+        lambda d: d.find_element("css selector", "input[data-testid='username']")
+    )
 
     yield drv
     drv.quit()

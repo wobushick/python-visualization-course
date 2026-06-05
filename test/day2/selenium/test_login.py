@@ -1,7 +1,7 @@
 """
 登录页面测试
 ============
-使用 Selenium 测试 day2 的简单登录页面。
+使用 Selenium 测试 day2 的登录页面（HTML 版本）。
 """
 
 import time
@@ -15,28 +15,24 @@ from selenium.webdriver.support import expected_conditions as EC
 # 辅助函数
 # ============================================================
 
-# 登录页面元素定位器
-USERNAME_INPUT = (By.CSS_SELECTOR, "textarea[data-testid='textbox']")
+# HTML 登录页面元素定位器
+USERNAME_INPUT = (By.CSS_SELECTOR, "input[data-testid='username']")
 PASSWORD_INPUT = (By.CSS_SELECTOR, "input[data-testid='password']")
-BTN_LOGIN = (By.XPATH, "//button[contains(., 'Sign In')]")
-
-
-def get_input_fields(driver):
-    """获取用户名和密码输入框。"""
-    username_field = driver.find_element(*USERNAME_INPUT)
-    password_field = driver.find_element(*PASSWORD_INPUT)
-    return username_field, password_field
+BTN_LOGIN = (By.CSS_SELECTOR, "button[type='submit']")
+OUTPUT_STATUS = (By.CSS_SELECTOR, ".output .status")
+OUTPUT_MESSAGE = (By.CSS_SELECTOR, ".output .message")
 
 
 def fill_fields(driver, username="", password=""):
     """填写用户名和密码。"""
-    username_field, password_field = get_input_fields(driver)
-    username_field.clear()
+    u = driver.find_element(*USERNAME_INPUT)
+    p = driver.find_element(*PASSWORD_INPUT)
+    u.clear()
     if username:
-        username_field.send_keys(username)
-    password_field.clear()
+        u.send_keys(username)
+    p.clear()
     if password:
-        password_field.send_keys(password)
+        p.send_keys(password)
 
 
 def click_login(driver, wait):
@@ -46,14 +42,13 @@ def click_login(driver, wait):
 
 
 def get_output_text(driver):
-    """获取输出区域的文本。"""
-    # Gradio 的 Textbox 输出区
-    outputs = driver.find_elements(By.CSS_SELECTOR, "textarea[data-testid='textbox']")
-    if len(outputs) >= 3:
-        status = outputs[1].get_attribute("value") or ""
-        message = outputs[2].get_attribute("value") or ""
+    """获取输出区域的状态和消息。"""
+    try:
+        status = driver.find_element(*OUTPUT_STATUS).text
+        message = driver.find_element(*OUTPUT_MESSAGE).text
         return status, message
-    return "", ""
+    except Exception:
+        return "", ""
 
 
 # ============================================================
@@ -79,10 +74,10 @@ class TestNormalLogin:
         try:
             fill_fields(driver, username, password)
             click_login(driver, wait)
-            time.sleep(1)
+            time.sleep(0.5)
 
             status, message = get_output_text(driver)
-            assert "成功" in status, f"登录失败: {message}"
+            assert "通过" in status, f"登录失败: {message}"
 
             duration = int((time.time() - start) * 1000)
             result_collector.add(
@@ -92,8 +87,8 @@ class TestNormalLogin:
                 duration_ms=duration,
             )
         except Exception as e:
-            duration = int((time.time() - start) * 1000)
             screenshot = _take_screenshot(driver, test_id)
+            duration = int((time.time() - start) * 1000)
             result_collector.add(
                 test_id=test_id, name=desc, category="正常场景",
                 inputs=inputs, status="FAIL",
@@ -128,10 +123,10 @@ class TestUsernameAbnormal:
         try:
             fill_fields(driver, username, password)
             click_login(driver, wait)
-            time.sleep(1)
+            time.sleep(0.5)
 
             status, message = get_output_text(driver)
-            assert "失败" in status, f"预期登录失败，但成功了: {message}"
+            assert "拒绝" in status, f"预期登录失败，但成功了: {message}"
 
             duration = int((time.time() - start) * 1000)
             result_collector.add(
@@ -141,8 +136,8 @@ class TestUsernameAbnormal:
                 duration_ms=duration,
             )
         except Exception as e:
-            duration = int((time.time() - start) * 1000)
             screenshot = _take_screenshot(driver, test_id)
+            duration = int((time.time() - start) * 1000)
             result_collector.add(
                 test_id=test_id, name=desc, category="用户名异常",
                 inputs=inputs, status="FAIL",
@@ -177,10 +172,10 @@ class TestPasswordAbnormal:
         try:
             fill_fields(driver, username, password)
             click_login(driver, wait)
-            time.sleep(1)
+            time.sleep(0.5)
 
             status, message = get_output_text(driver)
-            assert "失败" in status, f"预期登录失败，但成功了: {message}"
+            assert "拒绝" in status, f"预期登录失败，但成功了: {message}"
 
             duration = int((time.time() - start) * 1000)
             result_collector.add(
@@ -190,8 +185,8 @@ class TestPasswordAbnormal:
                 duration_ms=duration,
             )
         except Exception as e:
-            duration = int((time.time() - start) * 1000)
             screenshot = _take_screenshot(driver, test_id)
+            duration = int((time.time() - start) * 1000)
             result_collector.add(
                 test_id=test_id, name=desc, category="密码异常",
                 inputs=inputs, status="FAIL",
@@ -224,10 +219,10 @@ class TestSecurity:
         try:
             fill_fields(driver, username, password)
             click_login(driver, wait)
-            time.sleep(1)
+            time.sleep(0.5)
 
             status, message = get_output_text(driver)
-            assert "失败" in status, f"安全攻击被接受了: {message}"
+            assert "拒绝" in status, f"安全攻击被接受了: {message}"
 
             duration = int((time.time() - start) * 1000)
             result_collector.add(
@@ -237,8 +232,8 @@ class TestSecurity:
                 duration_ms=duration,
             )
         except Exception as e:
-            duration = int((time.time() - start) * 1000)
             screenshot = _take_screenshot(driver, test_id)
+            duration = int((time.time() - start) * 1000)
             result_collector.add(
                 test_id=test_id, name=desc, category="安全测试",
                 inputs=inputs, status="FAIL",
@@ -272,11 +267,10 @@ class TestBoundary:
         try:
             fill_fields(driver, username, password)
             click_login(driver, wait)
-            time.sleep(1)
+            time.sleep(0.5)
 
             status, message = get_output_text(driver)
-            # 边界值测试主要验证不崩溃，结果取决于具体逻辑
-            assert "成功" in status or "失败" in status, f"异常状态: {status}"
+            assert "通过" in status or "拒绝" in status, f"异常状态: {status}"
 
             duration = int((time.time() - start) * 1000)
             result_collector.add(
@@ -286,8 +280,8 @@ class TestBoundary:
                 duration_ms=duration,
             )
         except Exception as e:
-            duration = int((time.time() - start) * 1000)
             screenshot = _take_screenshot(driver, test_id)
+            duration = int((time.time() - start) * 1000)
             result_collector.add(
                 test_id=test_id, name=desc, category="边界值",
                 inputs=inputs, status="FAIL",
@@ -302,11 +296,12 @@ class TestBoundary:
 # ============================================================
 
 def _take_screenshot(driver, test_id: str) -> str:
-    """失败时截图，返回文件路径。"""
+    """截图，返回文件路径。"""
     from pathlib import Path
     screenshots_dir = Path(__file__).parent / "screenshots"
     screenshots_dir.mkdir(exist_ok=True)
-    filename = f"{test_id}_{int(time.time())}.png"
-    filepath = screenshots_dir / filename
+    # 文件名：测试ID（去掉中文，保留英文和数字）
+    safe_name = "".join(c if c.isascii() and c.isalnum() else "_" for c in test_id)
+    filepath = screenshots_dir / f"{safe_name}.png"
     driver.save_screenshot(str(filepath))
     return str(filepath)

@@ -15,9 +15,10 @@
 │   │   ├── .env                # 你的 API Key（不提交到 git）
 │   │   └── output/             # 生成的测试用例和结果
 │   └── day2/                   # Day2: 登录页面 + Selenium 测试
-│       ├── login_page.py       # 简单登录页面（Gradio）
+│       ├── login.html          # 登录页面（纯 HTML/CSS/JS）
+│       ├── login_page.py       # 登录页面（Gradio 备用）
 │       └── selenium/
-│           ├── conftest.py     # pytest fixtures
+│           ├── conftest.py     # pytest fixtures + HTTP 服务器
 │           ├── test_login.py   # Selenium 测试用例
 │           └── test_results.json  # 测试结果（JSON）
 ├── environment.yml             # Conda 环境配置
@@ -56,7 +57,6 @@ python test/day1/app.py
 # → 输出 test/day1/output/testcases.xlsx
 
 # 6. Day2: 运行 Selenium 测试
-python test/day2/login_page.py &
 cd test/day2/selenium
 pytest -v
 ```
@@ -87,7 +87,6 @@ python test\day1\app.py
 # → 输出 test\day1\output\testcases.xlsx
 
 # 7. Day2: 运行 Selenium 测试
-python test\day2\login_page.py &
 cd test\day2\selenium
 pytest -v
 ```
@@ -109,9 +108,18 @@ python app.py
 
 ### Day2: Selenium 自动化测试
 
-1. 启动登录页面：`python test/day2/login_page.py`
-2. 运行 Selenium 测试：`cd test/day2/selenium && pytest -v`
-3. 查看测试结果：`cat test/day2/selenium/test_results.json`
+```bash
+# 直接运行测试（自动启动 HTTP 服务器）
+cd test/day2/selenium
+pytest -v
+
+# 查看测试结果
+cat test_results.json
+```
+
+登录页面为纯 HTML，Selenium 测试时会自动启动 HTTP 服务器提供页面。
+
+> **有头模式**：默认以有头模式运行 Chrome，可直观看到浏览器操作。如需无头模式（CI/服务器环境），设置环境变量 `HEADLESS=1`。
 
 ## 测试账号
 
