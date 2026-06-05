@@ -10,10 +10,9 @@
 │   ├── python-environments-explained.md
 │   └── 01_基于LLM协同辅助自动化测试--Deepseek V3(1).md
 ├── test/
-│   └── day1/
-│       ├── app.py          # 主程序：Gradio UI + 用例生成
-│       ├── run_tests.py    # 测试执行器：读取 Excel → 逐条校验
-│       └── .env            # 你的 API Key（不提交到 git）
+│   ├── app.py              # 主程序：Gradio UI + 用例生成
+│   ├── run_tests.py        # 测试执行器：读取 Excel → 逐条校验
+│   └── .env                # 你的 API Key（不提交到 git）
 ├── environment.yml         # Conda 环境配置
 ├── .gitignore
 ├── .gitattributes
@@ -41,11 +40,11 @@ conda env create -f environment.yml
 conda activate viz-course
 
 # 4. 配置 API Key
-cp test/day1/.env.example test/day1/.env
-# 编辑 test/day1/.env，填入你的 DeepSeek API Key
+cp test/.env.example test/.env
+# 编辑 test/.env，填入你的 DeepSeek API Key
 
 # 5. 运行
-python test/day1/app.py
+python test/app.py
 # 浏览器打开 http://127.0.0.1:7860
 ```
 
@@ -67,11 +66,11 @@ conda env create -f environment.yml
 conda activate viz-course
 
 # 5. 配置 API Key（在文件资源管理器中操作或命令行）
-#    复制 test\day1\.env.example 为 test\day1\.env
+#    复制 test\.env.example 为 test\.env
 #    编辑 .env，填入你的 DeepSeek API Key
 
 # 6. 运行
-python test\day1\app.py
+python test\app.py
 # 浏览器打开 http://127.0.0.1:7860
 ```
 
@@ -112,7 +111,7 @@ git push origin feature/你的功能名
 A: 确认已激活 viz-course 环境（终端前面有 `(viz-course)`），如果没有：`conda activate viz-course`
 
 **Q: DeepSeek API 返回错误**
-A: 检查 `test/day1/.env` 中的 `DEEPSEEK_API_KEY` 是否正确，以及账户余额是否充足
+A: 检查 `test/.env` 中的 `DEEPSEEK_API_KEY` 是否正确，以及账户余额是否充足
 
 **Q: Windows 上路径找不到**
-A: Windows 路径用 `\` 而非 `/`，如 `python test\day1\app.py`
+A: Windows 路径用 `\` 而非 `/`，如 `python test\app.py`
