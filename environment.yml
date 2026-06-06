@@ -1,4 +1,4 @@
-name: viz-course
+name: data-viz
 channels:
   - defaults
 dependencies:

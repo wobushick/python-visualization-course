@@ -2,68 +2,60 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 项目概述
-
-"基于 LLM 协同辅助自动化测试"课程项目。分两天完成：
-- **Day1**: 调用 DeepSeek API 生成登录测试用例 → 输出 Excel/Markdown
-- **Day2**: 用 Selenium 对纯 HTML 登录页面执行自动化测试
-
-## 环境与运行
+## 环境
 
 ```bash
-# 环境激活
-conda activate viz-course
+conda activate data-viz  # 从 environment.yml 创建
+```
 
-# Day1: 生成测试用例（需要 .env 中的 DEEPSEEK_API_KEY）
+项目根目录在 `/home/ck/python-visualization-course`（WSL2 环境）。
+
+## 项目概述
+
+基于 LLM 协同辅助自动化测试的教学项目。核心流程：使用 DeepSeek API 生成登录测试用例 → 通过 Selenium 对登录页面执行自动化测试 → 收集结果。
+
+### 两条工作流
+
+**Day1 — 生成测试用例：**
+```bash
 python test/day1/app.py
-
-# Day2: Selenium 测试（自动启动 HTTP 服务器，有头模式）
-cd test/day2/selenium && pytest -v
-
-# 无头模式（CI/服务器）
-HEADLESS=1 pytest -v
-
-# 指定外部页面地址（跳过内置 HTTP 服务器）
-APP_URL=http://localhost:8080 pytest -v
+# → 输出 test/day1/output/testcases.xlsx + testcases.md（20 条用例）
 ```
+调用 DeepSeek API（密钥在 `test/day1/.env`），生成 Markdown 表格，解析后写入 Excel。
 
-Chrome/ChromeDriver 路径硬编码为 `~/tools/chrome-linux64/` 和 `~/tools/chromedriver-linux64/`，修改 `conftest.py:25-26` 调整。
-
-## 架构
-
+**Day2 — Selenium 自动化测试：**
+```bash
+cd test/day2/selenium
+pytest -v                       # 有头模式（默认，可见浏览器操作）
+HEADLESS=1 pytest -v            # 无头模式（CI/服务器）
 ```
-test/
-├── day1/
-│   ├── app.py          # DeepSeek API → Markdown 表格 → Excel（openai SDK + pandas）
-│   └── output/         # 生成物：testcases.xlsx, testcases.md
-└── day2/
-    ├── login.html      # 纯前端登录页（JS 验证，Selenium 测试目标）
-    ├── login_page.py   # Gradio 备用登录页（Python 验证，逻辑与 HTML 版一致）
-    └── selenium/
-        ├── conftest.py     # fixtures: app_url（内置 HTTP 服务器）、driver（Chrome）、result_collector
-        └── test_login.py   # parametrize 测试：正常/用户名异常/密码异常/安全/边界值
-```
+pytest 自动启动 HTTP 服务器托管 `test/day2/login.html`，然后在 Chrome 中运行 30 条测试用例。结果写入 `test/day2/selenium/test_results.json`，失败时截图保存到 `screenshots/`。
 
-### 关键设计
+### 登录页面
 
-- **login.html** 的验证逻辑（JS）和 **login_page.py** 的验证逻辑（Python）是同步的——修改验证规则时两边都要改。
-- `conftest.py` 中的 `app_url` fixture 会自动在 `127.0.0.1:8080` 启动一个 `http.server` 来 serve `day2/` 目录，端口被占用则跳过。
-- `TestResultCollector`（conftest.py）收集每条测试结果，session 结束时写入 `test_results.json`。
-- 失败测试自动截图到 `screenshots/` 目录。
-- 测试用例硬编码 5 个用户：alice/bob_01/admin/test_user/charlie，与两个登录页面中的 `VALID_USERS` 一致。
+有两个版本，验证逻辑相同（5 个硬编码账号，纯前端验证，无数据库）：
+- **`test/day2/login.html`** — 纯 HTML/CSS/JS（赛博朋克主题）。Selenium 测试用这个版本。
+- **`test/day2/login_page.py`** — Gradio 深色奢华主题（端口 7862）。Day3 的演进起点。
 
-### 环境变量
+### Chrome 路径
 
-| 变量 | 用途 | 默认值 |
-|------|------|--------|
-| `DEEPSEEK_API_KEY` | Day1 API 密钥 | 无（必须设置） |
-| `DEEPSEEK_BASE_URL` | API 地址 | `https://api.deepseek.com` |
-| `DEEPSEEK_MODEL` | 模型名 | `deepseek-v4` |
-| `HEADLESS` | Selenium 无头模式 | 未设置=有头 |
-| `APP_URL` | 跳过内置服务器，直接访问此地址 | 未设置=自动启动 |
+Chrome 和 ChromeDriver 安装在用户目录下：
+- Chrome：`~/tools/chrome-linux64/chrome`
+- ChromeDriver：`~/tools/chromedriver-linux64/chromedriver`
 
-## 注意事项
+这两个路径硬编码在 `conftest.py` 中。如需更新 Chrome 版本，替换上述目录即可。
 
-- `.env` 文件包含 API Key，已 gitignore，不要提交。
-- 测试断言用中文关键词：成功=`"通过"`，失败=`"拒绝"`。
-- 修改测试用例的 `parametrize` 数据时，确保对应的 `VALID_USERS` 字典也同步更新。
+## 架构要点
+
+- **`test/day1/app.py`**：独立脚本。通过 `openai` 库调用 DeepSeek（兼容接口），解析返回的 Markdown 表格，用 `openpyxl` 写入 Excel。API 配置从同目录 `.env` 读取（`DEEPSEEK_API_KEY`、`DEEPSEEK_BASE_URL`、`DEEPSEEK_MODEL`）。
+- **`test/day2/selenium/conftest.py`**：pytest session fixtures。提供 `driver`（全局共享 Chrome 实例，eager 页面加载策略）、`app_url`（自动找可用端口启动 HTTP 服务器）、`wait`（WebDriverWait 封装）、`result_collector`（收集测试结果并在 session 结束时写入 JSON）。
+- **`test/day2/selenium/test_login.py`**：30 条 parametrized 测试，分 4 个类 — `TestNormalLogin`（5）、`TestUsernameAbnormal`（7）、`TestPasswordAbnormal`（7）、`TestSecurity`（5）、`TestBoundary`（6）。每个测试记录耗时、截图和实际输出到 `result_collector`。
+- **登录验证规则**：用户名 3-20 位字母/数字/下划线；密码 8-20 位，必须含大小写字母和数字；SQL 注入和 XSS 模式检测；空格被 trim 处理。
+
+## 关键约定
+
+- `.env` 文件包含真实 API Key，绝不能提交（已在 `.gitignore` 中）。
+- `test/.env` 和 `test/day1/.env` 均存在（可能是重复配置，注意保持一致）。
+- 输出文件（`output/`、`*.xlsx`、`screenshots/`、`test_results.json`）均在 `.gitignore` 中排除。
+- Git 提交信息遵循 `feat:` / `fix:` / `refactor:` / `perf:` / `docs:` 前缀惯例。
+- `.claude/settings.local.json` 中有预配置的命令 allowlist。
