@@ -9,11 +9,12 @@ Day4: pyecharts 可视化大屏
 """
 
 import json
+import random
 from collections import Counter
 from pathlib import Path
 
 from pyecharts import options as opts
-from pyecharts.charts import Bar, Line, Page, Pie
+from pyecharts.charts import Bar, Page, Pie, Scatter
 
 # ============================================================
 # 配置
@@ -177,84 +178,143 @@ def create_avg_duration_bar(results: list[dict]) -> Bar:
 
 
 # ============================================================
-# 图表 3: 柱状图 — 各类别用例数统计
+# 图表 3: 水平柱状图 — 验证结果分布
 # ============================================================
 
-def create_count_bar(results: list[dict]) -> Bar:
-    """各类别测试用例数量柱状图。"""
-    category_counts = Counter(r["category"] for r in results)
-    categories = list(CATEGORY_COLORS.keys())
-    counts = [category_counts.get(cat, 0) for cat in categories]
-    bar_colors = [CATEGORY_COLORS[cat] for cat in categories]
+# 归一化规则：从 actual_output 提取关键词映射到统一类别
+VALIDATION_RULES = {
+    "登录成功": ["登录成功"],
+    "格式校验失败": ["只能包含字母、数字和下划线", "必须包含大小写字母和数字"],
+    "长度校验失败": ["长度不能少于", "长度不能超过"],
+    "空值校验失败": ["不能为空"],
+    "账号不匹配": ["密码错误", "用户不存在"],
+    "安全拦截": ["检测到非法输入", "安全攻击被拒绝"],
+}
+
+VALIDATION_COLORS = {
+    "登录成功": COLORS["green"],
+    "格式校验失败": COLORS["amber"],
+    "长度校验失败": COLORS["cyan"],
+    "空值校验失败": COLORS["pink"],
+    "账号不匹配": COLORS["purple"],
+    "安全拦截": COLORS["red"],
+}
+
+
+def _normalize_output(actual_output: str) -> str:
+    """将 actual_output 归一化为校验规则类别。"""
+    for rule_name, keywords in VALIDATION_RULES.items():
+        for kw in keywords:
+            if kw in actual_output:
+                return rule_name
+    return "其他"
+
+
+def create_validation_bar(results: list[dict]) -> Bar:
+    """验证结果分布水平柱状图 — 分析 actual_output 中的校验规则命中统计。"""
+    # 统计归一化后的规则命中次数
+    rule_counts: dict[str, int] = {}
+    rule_details: dict[str, list[str]] = {}  # 每类的原文示例
+
+    for r in results:
+        rule = _normalize_output(r["actual_output"])
+        rule_counts[rule] = rule_counts.get(rule, 0) + 1
+        if rule not in rule_details:
+            rule_details[rule] = []
+        msg = r["actual_output"].split(":")[-1].split("，")[0].strip()[:20]
+        if msg not in rule_details[rule]:
+            rule_details[rule].append(msg)
+
+    # 按数量降序排列
+    sorted_rules = sorted(rule_counts.items(), key=lambda x: x[1], reverse=True)
+    categories = [r[0] for r in sorted_rules]
+    counts = [r[1] for r in sorted_rules]
+    colors = [VALIDATION_COLORS.get(c, COLORS["slate"]) for c in categories]
 
     bar = (
         Bar(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="600px", height="400px"))
         .add_xaxis(categories)
         .add_yaxis(
-            "用例数",
+            "命中次数",
             counts,
             label_opts=opts.LabelOpts(
-                position="top",
+                position="right",
                 formatter="{c} 条",
                 color=COLORS["text"],
                 font_size=12,
             ),
-            itemstyle_opts=opts.ItemStyleOpts(
-                border_radius=[6, 6, 0, 0],
-            ),
+            itemstyle_opts=opts.ItemStyleOpts(border_radius=[0, 6, 6, 0]),
         )
+        .reversal_axis()
         .set_global_opts(
             title_opts=opts.TitleOpts(
-                title="各类别用例数量统计",
-                subtitle=f"共 {sum(counts)} 条测试用例",
+                title="验证结果分布",
+                subtitle="按校验规则类型统计（从 actual_output 解析）",
                 title_textstyle_opts=opts.TextStyleOpts(color=COLORS["text"], font_size=18),
-                subtitle_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"]),
+                subtitle_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"], font_size=11),
             ),
             xaxis_opts=opts.AxisOpts(
-                axislabel_opts=opts.LabelOpts(color=COLORS["text"], rotate=15),
-                axisline_opts=opts.AxisLineOpts(linestyle_opts=opts.LineStyleOpts(color=COLORS["slate"])),
-            ),
-            yaxis_opts=opts.AxisOpts(
                 axislabel_opts=opts.LabelOpts(color=COLORS["text"]),
                 splitline_opts=opts.SplitLineOpts(
                     linestyle_opts=opts.LineStyleOpts(color="rgba(255,255,255,0.06)")
                 ),
             ),
-            tooltip_opts=opts.TooltipOpts(trigger="axis", formatter="{b}: {c} 条"),
+            yaxis_opts=opts.AxisOpts(
+                axislabel_opts=opts.LabelOpts(color=COLORS["text"], font_size=12),
+                axisline_opts=opts.AxisLineOpts(linestyle_opts=opts.LineStyleOpts(color=COLORS["slate"])),
+            ),
+            tooltip_opts=opts.TooltipOpts(
+                trigger="axis",
+                formatter=lambda x: f"{x[0].name}: {x[0].value} 条<br>包含: {', '.join(rule_details.get(x[0].name, []))}" if x else "",
+            ),
             legend_opts=opts.LegendOpts(is_show=False),
         )
-        .set_colors([COLORS["amber"]])
     )
+    # 逐条设置颜色
+    for i, color in enumerate(colors):
+        bar.set_colors(color)
+    bar.set_colors(colors)
     return bar
 
 
 # ============================================================
-# 图表 4: 折线图 — 各用例执行耗时
+# 图表 4: 散点图 — 用例耗时分布
 # ============================================================
 
-def create_duration_line(results: list[dict]) -> Line:
-    """各测试用例执行耗时折线图（按类别着色）。"""
+def create_duration_scatter(results: list[dict]) -> Scatter:
+    """用例耗时分布散点图 — 按类别着色，X 轴带 jitter 避免重叠。"""
     avg_ms = round(sum(r["duration_ms"] for r in results) / len(results))
 
-    # 按类别分组绘制折线
-    cat_data: dict[str, list[tuple[int, int]]] = {}
-    for i, r in enumerate(results, 1):
-        cat_data.setdefault(r["category"], []).append((i, r["duration_ms"]))
+    # 为每个类别分配 X 索引
+    cat_list = list(CATEGORY_COLORS.keys())
+    cat_index = {cat: i for i, cat in enumerate(cat_list)}
 
-    line = (
-        Line(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="600px", height="400px"))
+    # 按类别分组，同类内 X 加 jitter
+    cat_data: dict[str, list[tuple[float, int]]] = {}
+    for r in results:
+        cat = r["category"]
+        x_jitter = cat_index[cat] + random.uniform(-0.25, 0.25)
+        cat_data.setdefault(cat, []).append((x_jitter, r["duration_ms"]))
+
+    scatter = (
+        Scatter(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="600px", height="400px"))
         .set_global_opts(
             title_opts=opts.TitleOpts(
-                title="各测试用例执行耗时",
-                subtitle=f"平均耗时: {avg_ms} ms",
+                title="用例耗时分布",
+                subtitle=f"每个点代表一个测试用例 · 平均: {avg_ms}ms · 虚线=平均线",
                 title_textstyle_opts=opts.TextStyleOpts(color=COLORS["text"], font_size=18),
-                subtitle_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"]),
+                subtitle_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"], font_size=11),
             ),
             xaxis_opts=opts.AxisOpts(
-                name="用例序号",
-                name_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"]),
-                axislabel_opts=opts.LabelOpts(color=COLORS["text"]),
+                name="",
+                axislabel_opts=opts.LabelOpts(
+                    color=COLORS["text"],
+                    formatter=lambda x: cat_list[int(x)] if 0 <= int(x) < len(cat_list) else "",
+                    rotate=15,
+                ),
                 axisline_opts=opts.AxisLineOpts(linestyle_opts=opts.LineStyleOpts(color=COLORS["slate"])),
+                min_=-0.5,
+                max_=len(cat_list) - 0.5,
             ),
             yaxis_opts=opts.AxisOpts(
                 name="耗时 (ms)",
@@ -264,7 +324,10 @@ def create_duration_line(results: list[dict]) -> Line:
                     linestyle_opts=opts.LineStyleOpts(color="rgba(255,255,255,0.06)")
                 ),
             ),
-            tooltip_opts=opts.TooltipOpts(trigger="axis"),
+            tooltip_opts=opts.TooltipOpts(
+                trigger="item",
+                formatter="{b}",
+            ),
             legend_opts=opts.LegendOpts(
                 orient="vertical",
                 pos_right="5%",
@@ -274,34 +337,26 @@ def create_duration_line(results: list[dict]) -> Line:
         )
     )
 
+    # 每类别一个 series
     for cat, color in CATEGORY_COLORS.items():
-        if cat in cat_data:
-            xs = [p[0] for p in cat_data[cat]]
-            ys = [p[1] for p in cat_data[cat]]
-            line.add_xaxis(xs)
-            line.add_yaxis(
+        points = cat_data.get(cat, [])
+        if points:
+            scatter.add_xaxis([p[0] for p in points])
+            scatter.add_yaxis(
                 cat,
-                ys,
-                is_smooth=True,
+                [p[1] for p in points],
+                symbol_size=10,
                 symbol="circle",
-                symbol_size=6,
-                linestyle_opts=opts.LineStyleOpts(color=color, width=2),
-                itemstyle_opts=opts.ItemStyleOpts(color=color),
                 label_opts=opts.LabelOpts(is_show=False),
+                itemstyle_opts=opts.ItemStyleOpts(color=color, opacity=0.8),
+                markline_opts=opts.MarkLineOpts(
+                    data=[opts.MarkLineItem(y=avg_ms, name=f"平均 {avg_ms}ms")],
+                    label_opts=opts.LabelOpts(formatter="平均 {c}ms", color=COLORS["text"]),
+                    linestyle_opts=opts.LineStyleOpts(color="#ef4444", type_="dashed", width=1.5, opacity=0.7),
+                ) if cat == list(CATEGORY_COLORS.keys())[0] else None,
             )
 
-    # 添加平均线 marker
-    line.add_yaxis(
-        f"平均线 ({avg_ms}ms)",
-        [avg_ms] * len(results),
-        linestyle_opts=opts.LineStyleOpts(
-            color=COLORS["slate"], type_="dashed", width=1.5, opacity=0.6
-        ),
-        symbol="none",
-        label_opts=opts.LabelOpts(is_show=False),
-    )
-
-    return line
+    return scatter
 
 
 # ============================================================
@@ -314,8 +369,8 @@ def build_dashboard(results: list[dict]) -> Page:
     page.add(
         create_category_pie(results),
         create_avg_duration_bar(results),
-        create_count_bar(results),
-        create_duration_line(results),
+        create_validation_bar(results),
+        create_duration_scatter(results),
     )
     return page
 
