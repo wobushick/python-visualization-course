@@ -14,6 +14,7 @@ from pathlib import Path
 
 from pyecharts import options as opts
 from pyecharts.charts import Bar, Page, Pie
+from pyecharts.commons.utils import JsCode
 
 # ============================================================
 # 配置
@@ -194,7 +195,7 @@ def create_avg_duration_bar(results: list[dict]) -> Bar:
             yaxis_opts=opts.AxisOpts(
                 axislabel_opts=opts.LabelOpts(color=COLORS["text"]),
                 splitline_opts=opts.SplitLineOpts(
-                    linestyle_opts=opts.LineStyleOpts(color="rgba(255,255,255,0.06)")
+                    linestyle_opts=opts.LineStyleOpts(color="rgba(0,0,0,0.06)")
                 ),
             ),
             tooltip_opts=opts.TooltipOpts(trigger="axis", formatter="{b}: {c} ms"),
@@ -283,7 +284,7 @@ def create_validation_bar(results: list[dict]) -> Bar:
             xaxis_opts=opts.AxisOpts(
                 axislabel_opts=opts.LabelOpts(color=COLORS["text"]),
                 splitline_opts=opts.SplitLineOpts(
-                    linestyle_opts=opts.LineStyleOpts(color="rgba(255,255,255,0.06)")
+                    linestyle_opts=opts.LineStyleOpts(color="rgba(0,0,0,0.06)")
                 ),
             ),
             yaxis_opts=opts.AxisOpts(
@@ -339,9 +340,10 @@ def create_category_input_stacked_bar(results: list[dict]) -> Bar:
             stack="总量",
             label_opts=opts.LabelOpts(
                 position="inside",
-                formatter="{c}" if any(v > 1 for v in values) else "",
+                formatter=JsCode("function(p){return p.value >= 2 ? p.value : '';}"),
                 color="#fff",
-                font_size=10,
+                font_size=11,
+                font_weight="bold",
             ),
             itemstyle_opts=opts.ItemStyleOpts(
                 color=INPUT_TYPE_COLORS[tp],
@@ -365,7 +367,7 @@ def create_category_input_stacked_bar(results: list[dict]) -> Bar:
             name_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"]),
             axislabel_opts=opts.LabelOpts(color=COLORS["text"]),
             splitline_opts=opts.SplitLineOpts(
-                linestyle_opts=opts.LineStyleOpts(color="rgba(255,255,255,0.06)")
+                linestyle_opts=opts.LineStyleOpts(color="rgba(0,0,0,0.06)")
             ),
         ),
         tooltip_opts=opts.TooltipOpts(
