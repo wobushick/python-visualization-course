@@ -12,3 +12,4 @@ dependencies:
       - openpyxl>=3.0.0
       - selenium>=4.0.0
       - pytest>=7.0.0
+      - pyecharts>=2.0.0

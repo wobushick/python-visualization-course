@@ -40,7 +40,7 @@ def generate_test_cases(
             password_format=password_format,
         )
     else:
-        prompt = f"""请根据以下要求生成 20 个用户登录功能测试用例：
+        prompt = f"""请根据以下要求生成 30 个用户登录功能测试用例：
 
 ### 字段说明：
 - username: {username_format}
@@ -49,16 +49,16 @@ def generate_test_cases(
 ### 测试用例要求：
 1. 包含 5 种正常登录场景（使用符合格式要求的合法数据）
 2. 包含 10 种异常场景：
-   - 用户名异常（含特殊字符、超长、空值、不存在的用户名等）
-   - 密码不符合要求（过短、纯数字、空值、错误密码等）
-   - 用户名和密码组合错误
-   - SQL 注入尝试
-   - XSS 攻击尝试
-3. 包含 5 种边界值测试：
+   - 用户名异常（含特殊字符、超长、空值、不存在的用户名、大小写敏感等）
+   - 密码不符合要求（过短、纯数字/纯小写/纯大写、空值、错误密码等）
+3. 包含 5 种安全测试场景：
+   - SQL 注入尝试（用户名、密码、注释符）
+   - XSS 攻击尝试（script 标签、javascript 协议）
+4. 包含 10 种边界值测试：
    - 用户名长度边界（最短/最长）
    - 密码长度边界（最短/最长）
-   - 特殊字符处理（emoji、SQL注入、XSS等）
    - 空格处理（前后空格、中间空格）
+   - 特殊字符处理
    - 大小写敏感性测试
 
 ### 输出格式要求：
@@ -68,7 +68,7 @@ def generate_test_cases(
 |--------|---------|----------|----------|----------|
 | 1 | xxx | xxx | xxx | 登录成功 |
 | 2 | xxx | xxx | xxx | 登录失败：xxx |
-...共20行数据"""
+...共30行数据"""
 
     client = OpenAI(api_key=api_key, base_url=base_url)
     response = client.chat.completions.create(
