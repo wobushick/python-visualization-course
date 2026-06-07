@@ -110,12 +110,16 @@ def create_category_pie(results: list[dict]) -> Pie:
 
     data_pairs = [(tp, input_types[tp]) for tp in INPUT_TYPE_COLORS if tp in input_types]
 
+    # 构建含计数的图例文本
+    legend_data = [f"{tp} ({input_types[tp]}条)" for tp in INPUT_TYPE_COLORS if tp in input_types]
+
     pie = (
         Pie(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="780px", height="450px"))
         .add(
             series_name="用例数",
             data_pair=data_pairs,
-            radius=["20%", "70%"],
+            center=["35%", "50%"],           # 左移给图例留空间
+            radius=["25%", "60%"],
             rosetype="area",
             label_opts=opts.LabelOpts(
                 formatter="{b}\n{d}%",
@@ -136,9 +140,9 @@ def create_category_pie(results: list[dict]) -> Pie:
             ),
             legend_opts=opts.LegendOpts(
                 orient="vertical",
-                pos_right="5%",
+                pos_right="2%",
                 pos_top="center",
-                textstyle_opts=opts.TextStyleOpts(color=COLORS["text"]),
+                textstyle_opts=opts.TextStyleOpts(color=COLORS["text"], font_size=12),
             ),
             tooltip_opts=opts.TooltipOpts(trigger="item", formatter="{b}: {c} 条 ({d}%)"),
         )
@@ -331,11 +335,13 @@ def create_category_input_stacked_bar(results: list[dict]) -> Bar:
         .add_xaxis(cat_list)
     )
 
-    # 每输入类型一个堆叠层
+    # 每输入类型一个堆叠层（图例名含总数）
     for tp in type_list:
         values = [matrix[cat][tp] for cat in cat_list]
+        total = sum(values)
+        legend_name = f"{tp} ({total}条)" if total > 0 else tp
         bar.add_yaxis(
-            tp,
+            legend_name,
             values,
             stack="总量",
             label_opts=opts.LabelOpts(
@@ -361,6 +367,7 @@ def create_category_input_stacked_bar(results: list[dict]) -> Bar:
         xaxis_opts=opts.AxisOpts(
             axislabel_opts=opts.LabelOpts(color=COLORS["text"], rotate=15),
             axisline_opts=opts.AxisLineOpts(linestyle_opts=opts.LineStyleOpts(color=COLORS["slate"])),
+            boundary_gap=True,
         ),
         yaxis_opts=opts.AxisOpts(
             name="用例数",
@@ -375,10 +382,10 @@ def create_category_input_stacked_bar(results: list[dict]) -> Bar:
             axis_pointer_type="shadow",
         ),
         legend_opts=opts.LegendOpts(
-            orient="vertical",
-            pos_right="5%",
-            pos_top="center",
-            textstyle_opts=opts.TextStyleOpts(color=COLORS["text"]),
+            orient="horizontal",
+            pos_left="center",
+            pos_bottom="0%",
+            textstyle_opts=opts.TextStyleOpts(color=COLORS["text"], font_size=12),
         ),
     )
     return bar
