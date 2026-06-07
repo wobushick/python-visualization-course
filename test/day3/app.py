@@ -325,14 +325,23 @@ def handle_run_tests(headless: bool) -> tuple:
 # ============================================================
 
 def handle_open_dashboard() -> str:
-    """生成可视化大屏并在浏览器中打开。"""
+    """生成可视化大屏并在 Windows 浏览器中打开（WSL2 适配）。"""
     try:
         results = load_test_results()
         from test.day4.dashboard import OUTPUT_DIR as DASH_OUTPUT
         dashboard_path = DASH_OUTPUT / "dashboard.html"
         build_dashboard(results).render(str(dashboard_path))
-        webbrowser.open(str(dashboard_path))
+        # WSL2: 通过 cmd.exe /c start 在 Windows 浏览器中打开
+        url = "http://localhost:7864/dashboard.html"
+        subprocess.run(["cmd.exe", "/c", "start", url], capture_output=True)
         return ""
+    except FileNotFoundError:
+        # fallback: 非 WSL 环境直接用 webbrowser
+        try:
+            webbrowser.open(url)
+            return ""
+        except Exception as e2:
+            return f'<div style="padding:20px;text-align:center;color:#ef4444;">❌ {e2}</div>'
     except Exception as e:
         return f"""<div style="padding:20px;text-align:center;color:#ef4444;">
             ❌ 打开失败: {e}</div>"""
@@ -548,6 +557,19 @@ def build_ui():
 # ============================================================
 
 if __name__ == "__main__":
+    # 启动微型 HTTP 服务器，托管 dashboard 目录（端口 7864）
+    # WSL2 用户可通过 Windows 浏览器访问 http://localhost:7864/
+    import http.server
+    import threading
+    from test.day4.dashboard import OUTPUT_DIR as DASH_OUTPUT
+
+    class DashHandler(http.server.SimpleHTTPRequestHandler):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, directory=str(DASH_OUTPUT), **kwargs)
+
+    dash_server = http.server.HTTPServer(("127.0.0.1", 7864), DashHandler)
+    threading.Thread(target=dash_server.serve_forever, daemon=True).start()
+
     demo = build_ui()
     demo.launch(
         server_port=7863,
