@@ -113,9 +113,6 @@ def create_category_pie(results: list[dict]) -> Pie:
 
     data_pairs = [(tp, input_types[tp]) for tp in INPUT_TYPE_COLORS if tp in input_types]
 
-    # 构建含计数的图例文本
-    legend_data = [f"{tp} ({input_types[tp]}条)" for tp in INPUT_TYPE_COLORS if tp in input_types]
-
     pie = (
         Pie(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="780px", height="450px"))
         .add(
