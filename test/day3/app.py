@@ -332,10 +332,10 @@ def handle_open_dashboard() -> str:
         dashboard_path = DASH_OUTPUT / "dashboard.html"
         build_dashboard(results).render(str(dashboard_path))
         url = "http://localhost:7864/dashboard.html"
-        # WSL2: 用 Windows PowerShell Start-Process 在默认浏览器打开 URL
-        ps = "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
+        # WSL2: 用 rundll32 url.dll 在 Windows 默认浏览器打开 URL（最可靠）
         subprocess.run(
-            [ps, "-Command", f"Start-Process '{url}'"],
+            ["/mnt/c/Windows/System32/rundll32.exe",
+             "url.dll,FileProtocolHandler", url],
             capture_output=True, timeout=10,
         )
         return ""
