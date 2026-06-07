@@ -13,7 +13,7 @@ from collections import Counter
 from pathlib import Path
 
 from pyecharts import options as opts
-from pyecharts.charts import Bar, Page, Pie, Scatter
+from pyecharts.charts import Bar, Page, Pie
 
 # ============================================================
 # 配置
@@ -304,83 +304,81 @@ def create_validation_bar(results: list[dict]) -> Bar:
 
 
 # ============================================================
-# 图表 4: 散点图 — 输入特征空间
+# 图表 4: 堆叠柱状图 — 各类别输入类型构成
 # ============================================================
 
-def create_duration_scatter(results: list[dict]) -> Scatter:
-    """输入特征空间散点图 — X=用户名长度, Y=密码长度, 颜色=输入类型, 大小=耗时。
+def create_category_input_stacked_bar(results: list[dict]) -> Bar:
+    """各类别输入类型构成堆叠柱状图 — 展示每个测试类别中不同输入类型的占比。
 
-    展示测试用例在「输入空间」中的分布：
-    - 正常登录集中在左下区域（用户名短、密码适中）
-    - 边界值分布在坐标轴极端位置
-    - 安全攻击 payload 分散在不同区域
+    交叉分析两个维度：测试类别 × 输入类型。
+    例如：用户名异常类别主要包含格式异常+边界值+空值输入，安全测试类别则全是攻击 payload。
     """
-    # 按输入类型分组
-    type_points: dict[str, list[dict]] = {}
-    for r in results:
-        tp = _classify_input(r["inputs"]["username"], r["inputs"]["password"])
-        type_points.setdefault(tp, []).append(r)
+    cat_list = list(CATEGORY_COLORS.keys())
+    type_list = list(INPUT_TYPE_COLORS.keys())
 
-    scatter = (
-        Scatter(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="600px", height="400px"))
-        .set_global_opts(
-            title_opts=opts.TitleOpts(
-                title="输入特征空间分布",
-                subtitle="X=用户名长度  Y=密码长度  ·  气泡大小=执行耗时",
-                title_textstyle_opts=opts.TextStyleOpts(color=COLORS["text"], font_size=18),
-                subtitle_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"], font_size=11),
-            ),
-            xaxis_opts=opts.AxisOpts(
-                name="用户名长度",
-                name_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"]),
-                axislabel_opts=opts.LabelOpts(color=COLORS["text"]),
-                axisline_opts=opts.AxisLineOpts(linestyle_opts=opts.LineStyleOpts(color=COLORS["slate"])),
-                splitline_opts=opts.SplitLineOpts(
-                    linestyle_opts=opts.LineStyleOpts(color="rgba(255,255,255,0.06)")
-                ),
-                min_=-1,
-            ),
-            yaxis_opts=opts.AxisOpts(
-                name="密码长度",
-                name_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"]),
-                axislabel_opts=opts.LabelOpts(color=COLORS["text"]),
-                axisline_opts=opts.AxisLineOpts(linestyle_opts=opts.LineStyleOpts(color=COLORS["slate"])),
-                splitline_opts=opts.SplitLineOpts(
-                    linestyle_opts=opts.LineStyleOpts(color="rgba(255,255,255,0.06)")
-                ),
-                min_=-1,
-            ),
-            tooltip_opts=opts.TooltipOpts(
-                trigger="item",
-                formatter="{b}",
-            ),
-            legend_opts=opts.LegendOpts(
-                orient="vertical",
-                pos_right="5%",
-                pos_top="center",
-                textstyle_opts=opts.TextStyleOpts(color=COLORS["text"]),
-            ),
-        )
+    # 构建交叉矩阵: category → input_type → count
+    matrix: dict[str, dict[str, int]] = {cat: {t: 0 for t in type_list} for cat in cat_list}
+    for r in results:
+        cat = r["category"]
+        tp = _classify_input(r["inputs"]["username"], r["inputs"]["password"])
+        if cat in matrix:
+            matrix[cat][tp] += 1
+
+    bar = (
+        Bar(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="600px", height="400px"))
+        .add_xaxis(cat_list)
     )
 
-    # 每输入类型一个 series
-    for tp, color in INPUT_TYPE_COLORS.items():
-        pts = type_points.get(tp, [])
-        if pts:
-            xs = [len(r["inputs"]["username"]) for r in pts]
-            ys = [len(r["inputs"]["password"]) for r in pts]
+    # 每输入类型一个堆叠层
+    for tp in type_list:
+        values = [matrix[cat][tp] for cat in cat_list]
+        bar.add_yaxis(
+            tp,
+            values,
+            stack="总量",
+            label_opts=opts.LabelOpts(
+                position="inside",
+                formatter="{c}" if any(v > 1 for v in values) else "",
+                color="#fff",
+                font_size=10,
+            ),
+            itemstyle_opts=opts.ItemStyleOpts(
+                color=INPUT_TYPE_COLORS[tp],
+                border_radius=0,
+            ),
+        )
 
-            scatter.add_xaxis(xs)
-            scatter.add_yaxis(
-                tp,
-                ys,
-                symbol_size=12,
-                symbol="circle",
-                label_opts=opts.LabelOpts(is_show=False),
-                itemstyle_opts=opts.ItemStyleOpts(color=color, opacity=0.8),
-            )
-
-    return scatter
+    bar.set_global_opts(
+        title_opts=opts.TitleOpts(
+            title="各类别输入类型构成",
+            subtitle="测试类别 × 输入类型 交叉分析 : 每类测试覆盖了哪些输入特征",
+            title_textstyle_opts=opts.TextStyleOpts(color=COLORS["text"], font_size=18),
+            subtitle_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"], font_size=11),
+        ),
+        xaxis_opts=opts.AxisOpts(
+            axislabel_opts=opts.LabelOpts(color=COLORS["text"], rotate=15),
+            axisline_opts=opts.AxisLineOpts(linestyle_opts=opts.LineStyleOpts(color=COLORS["slate"])),
+        ),
+        yaxis_opts=opts.AxisOpts(
+            name="用例数",
+            name_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"]),
+            axislabel_opts=opts.LabelOpts(color=COLORS["text"]),
+            splitline_opts=opts.SplitLineOpts(
+                linestyle_opts=opts.LineStyleOpts(color="rgba(255,255,255,0.06)")
+            ),
+        ),
+        tooltip_opts=opts.TooltipOpts(
+            trigger="axis",
+            axis_pointer_type="shadow",
+        ),
+        legend_opts=opts.LegendOpts(
+            orient="vertical",
+            pos_right="5%",
+            pos_top="center",
+            textstyle_opts=opts.TextStyleOpts(color=COLORS["text"]),
+        ),
+    )
+    return bar
 
 
 # ============================================================
@@ -394,7 +392,7 @@ def build_dashboard(results: list[dict]) -> Page:
         create_category_pie(results),
         create_avg_duration_bar(results),
         create_validation_bar(results),
-        create_duration_scatter(results),
+        create_category_input_stacked_bar(results),
     )
     return page
 
