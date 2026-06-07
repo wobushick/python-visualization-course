@@ -331,20 +331,23 @@ def handle_open_dashboard() -> str:
         from test.day4.dashboard import OUTPUT_DIR as DASH_OUTPUT
         dashboard_path = DASH_OUTPUT / "dashboard.html"
         build_dashboard(results).render(str(dashboard_path))
-        # WSL2: 通过 cmd.exe /c start 在 Windows 浏览器中打开
         url = "http://localhost:7864/dashboard.html"
-        subprocess.run(["cmd.exe", "/c", "start", url], capture_output=True)
+        # WSL2: 用 Windows PowerShell Start-Process 在默认浏览器打开 URL
+        ps = "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
+        subprocess.run(
+            [ps, "-Command", f"Start-Process '{url}'"],
+            capture_output=True, timeout=10,
+        )
         return ""
-    except FileNotFoundError:
-        # fallback: 非 WSL 环境直接用 webbrowser
-        try:
-            webbrowser.open(url)
-            return ""
-        except Exception as e2:
-            return f'<div style="padding:20px;text-align:center;color:#ef4444;">❌ {e2}</div>'
     except Exception as e:
+        # fallback: 尝试 webbrowser
+        try:
+            webbrowser.open("http://localhost:7864/dashboard.html")
+            return ""
+        except Exception:
+            pass
         return f"""<div style="padding:20px;text-align:center;color:#ef4444;">
-            ❌ 打开失败: {e}</div>"""
+            ❌ 打开失败: {e}<br>请手动访问 <a href="http://localhost:7864/dashboard.html" target="_blank">http://localhost:7864/dashboard.html</a></div>"""
 
 
 def handle_manual_login(username: str, password: str) -> tuple[str, str]:
