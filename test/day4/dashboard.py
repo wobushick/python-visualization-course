@@ -9,7 +9,6 @@ Day4: pyecharts 可视化大屏
 """
 
 import json
-import random
 from collections import Counter
 from pathlib import Path
 
@@ -69,22 +68,52 @@ def load_results() -> list[dict]:
 
 
 # ============================================================
-# 图表 1: 饼图 — 测试用例分类分布（玫瑰图）
+# 图表 1: 饼图 — 测试输入类型分布（玫瑰图）
 # ============================================================
 
+INPUT_TYPE_COLORS = {
+    "正常合法": COLORS["green"],
+    "安全攻击": COLORS["red"],
+    "边界值": COLORS["cyan"],
+    "空值输入": COLORS["pink"],
+    "格式异常": COLORS["amber"],
+}
+
+
+def _classify_input(username: str, password: str) -> str:
+    """根据用户名和密码特征分类输入类型。"""
+    combined = (username + password).lower()
+    attack_kw = ["' or ", "'; --", "drop ", "delete ", "union select", "1=1",
+                 "<script", "javascript:", "onerror=", "onclick="]
+    if any(kw in combined for kw in attack_kw):
+        return "安全攻击"
+    if not username or not password:
+        return "空值输入"
+    if len(username) < 3 or len(username) > 20 or len(password) < 8 or len(password) > 20:
+        return "边界值"
+    if not username.replace("_", "").isalnum():
+        return "格式异常"
+    if not (any(c.islower() for c in password) and any(c.isupper() for c in password)
+            and any(c.isdigit() for c in password)):
+        return "格式异常"
+    return "正常合法"
+
+
 def create_category_pie(results: list[dict]) -> Pie:
-    """测试用例分类分布玫瑰图。"""
-    category_counts = Counter(r["category"] for r in results)
-    data_pairs = [
-        (cat, count) for cat, count in category_counts.items()
-    ]
+    """测试输入类型分布玫瑰图 — 按输入特征分类。"""
+    input_types = Counter()
+    for r in results:
+        tp = _classify_input(r["inputs"]["username"], r["inputs"]["password"])
+        input_types[tp] += 1
+
+    data_pairs = [(tp, input_types[tp]) for tp in INPUT_TYPE_COLORS if tp in input_types]
 
     pie = (
         Pie(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="600px", height="400px"))
         .add(
             series_name="用例数",
             data_pair=data_pairs,
-            radius=["20%", "70%"],              # 玫瑰图
+            radius=["20%", "70%"],
             rosetype="area",
             label_opts=opts.LabelOpts(
                 formatter="{b}\n{d}%",
@@ -98,8 +127,8 @@ def create_category_pie(results: list[dict]) -> Pie:
         )
         .set_global_opts(
             title_opts=opts.TitleOpts(
-                title="测试用例分类分布",
-                subtitle="按测试场景类别统计",
+                title="测试输入类型分布",
+                subtitle="按 (用户名, 密码) 特征分类",
                 title_textstyle_opts=opts.TextStyleOpts(color=COLORS["text"], font_size=18),
                 subtitle_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"]),
             ),
@@ -111,10 +140,7 @@ def create_category_pie(results: list[dict]) -> Pie:
             ),
             tooltip_opts=opts.TooltipOpts(trigger="item", formatter="{b}: {c} 条 ({d}%)"),
         )
-        .set_colors(list(CATEGORY_COLORS.values()))
-        .set_series_opts(
-            label_opts=opts.LabelOpts(formatter="{b}\n{d}%"),
-        )
+        .set_colors(list(INPUT_TYPE_COLORS.values()))
     )
     return pie
 
@@ -278,51 +304,51 @@ def create_validation_bar(results: list[dict]) -> Bar:
 
 
 # ============================================================
-# 图表 4: 散点图 — 用例耗时分布
+# 图表 4: 散点图 — 输入特征空间
 # ============================================================
 
 def create_duration_scatter(results: list[dict]) -> Scatter:
-    """用例耗时分布散点图 — 按类别着色，X 轴带 jitter 避免重叠。"""
-    avg_ms = round(sum(r["duration_ms"] for r in results) / len(results))
+    """输入特征空间散点图 — X=用户名长度, Y=密码长度, 颜色=输入类型, 大小=耗时。
 
-    # 为每个类别分配 X 索引
-    cat_list = list(CATEGORY_COLORS.keys())
-    cat_index = {cat: i for i, cat in enumerate(cat_list)}
-
-    # 按类别分组，同类内 X 加 jitter
-    cat_data: dict[str, list[tuple[float, int]]] = {}
+    展示测试用例在「输入空间」中的分布：
+    - 正常登录集中在左下区域（用户名短、密码适中）
+    - 边界值分布在坐标轴极端位置
+    - 安全攻击 payload 分散在不同区域
+    """
+    # 按输入类型分组
+    type_points: dict[str, list[dict]] = {}
     for r in results:
-        cat = r["category"]
-        x_jitter = cat_index[cat] + random.uniform(-0.25, 0.25)
-        cat_data.setdefault(cat, []).append((x_jitter, r["duration_ms"]))
+        tp = _classify_input(r["inputs"]["username"], r["inputs"]["password"])
+        type_points.setdefault(tp, []).append(r)
 
     scatter = (
         Scatter(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="600px", height="400px"))
         .set_global_opts(
             title_opts=opts.TitleOpts(
-                title="用例耗时分布",
-                subtitle=f"每个点代表一个测试用例 · 平均: {avg_ms}ms · 虚线=平均线",
+                title="输入特征空间分布",
+                subtitle="X=用户名长度  Y=密码长度  ·  气泡大小=执行耗时",
                 title_textstyle_opts=opts.TextStyleOpts(color=COLORS["text"], font_size=18),
                 subtitle_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"], font_size=11),
             ),
             xaxis_opts=opts.AxisOpts(
-                name="",
-                axislabel_opts=opts.LabelOpts(
-                    color=COLORS["text"],
-                    formatter=lambda x: cat_list[int(x)] if 0 <= int(x) < len(cat_list) else "",
-                    rotate=15,
-                ),
-                axisline_opts=opts.AxisLineOpts(linestyle_opts=opts.LineStyleOpts(color=COLORS["slate"])),
-                min_=-0.5,
-                max_=len(cat_list) - 0.5,
-            ),
-            yaxis_opts=opts.AxisOpts(
-                name="耗时 (ms)",
+                name="用户名长度",
                 name_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"]),
                 axislabel_opts=opts.LabelOpts(color=COLORS["text"]),
+                axisline_opts=opts.AxisLineOpts(linestyle_opts=opts.LineStyleOpts(color=COLORS["slate"])),
                 splitline_opts=opts.SplitLineOpts(
                     linestyle_opts=opts.LineStyleOpts(color="rgba(255,255,255,0.06)")
                 ),
+                min_=-1,
+            ),
+            yaxis_opts=opts.AxisOpts(
+                name="密码长度",
+                name_textstyle_opts=opts.TextStyleOpts(color=COLORS["slate"]),
+                axislabel_opts=opts.LabelOpts(color=COLORS["text"]),
+                axisline_opts=opts.AxisLineOpts(linestyle_opts=opts.LineStyleOpts(color=COLORS["slate"])),
+                splitline_opts=opts.SplitLineOpts(
+                    linestyle_opts=opts.LineStyleOpts(color="rgba(255,255,255,0.06)")
+                ),
+                min_=-1,
             ),
             tooltip_opts=opts.TooltipOpts(
                 trigger="item",
@@ -337,23 +363,21 @@ def create_duration_scatter(results: list[dict]) -> Scatter:
         )
     )
 
-    # 每类别一个 series
-    for cat, color in CATEGORY_COLORS.items():
-        points = cat_data.get(cat, [])
-        if points:
-            scatter.add_xaxis([p[0] for p in points])
+    # 每输入类型一个 series
+    for tp, color in INPUT_TYPE_COLORS.items():
+        pts = type_points.get(tp, [])
+        if pts:
+            xs = [len(r["inputs"]["username"]) for r in pts]
+            ys = [len(r["inputs"]["password"]) for r in pts]
+
+            scatter.add_xaxis(xs)
             scatter.add_yaxis(
-                cat,
-                [p[1] for p in points],
-                symbol_size=10,
+                tp,
+                ys,
+                symbol_size=12,
                 symbol="circle",
                 label_opts=opts.LabelOpts(is_show=False),
                 itemstyle_opts=opts.ItemStyleOpts(color=color, opacity=0.8),
-                markline_opts=opts.MarkLineOpts(
-                    data=[opts.MarkLineItem(y=avg_ms, name=f"平均 {avg_ms}ms")],
-                    label_opts=opts.LabelOpts(formatter="平均 {c}ms", color=COLORS["text"]),
-                    linestyle_opts=opts.LineStyleOpts(color="#ef4444", type_="dashed", width=1.5, opacity=0.7),
-                ) if cat == list(CATEGORY_COLORS.keys())[0] else None,
             )
 
     return scatter
