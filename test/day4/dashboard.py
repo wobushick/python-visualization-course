@@ -29,17 +29,18 @@ SOURCES = [
     PROJECT_ROOT / "test" / "day2" / "selenium" / "test_results.json",
 ]
 
-# 深色主题配色（与 Day2/Day3 一致）
+# Light 主题配色
 COLORS = {
-    "amber": "#c9a96e",
-    "cyan": "#38bdf8",
-    "green": "#22c55e",
-    "red": "#ef4444",
-    "purple": "#a78bfa",
-    "pink": "#f472b6",
-    "slate": "#64748b",
-    "bg": "#0f172a",
-    "text": "#e2e8f0",
+    "amber": "#b45309",
+    "cyan": "#0e7490",
+    "green": "#16a34a",
+    "red": "#dc2626",
+    "purple": "#7c3aed",
+    "pink": "#db2777",
+    "slate": "#94a3b8",
+    "bg": "#ffffff",
+    "text": "#1e293b",
+    "card_bg": "#f8fafc",
 }
 
 CATEGORY_COLORS = {
@@ -109,7 +110,7 @@ def create_category_pie(results: list[dict]) -> Pie:
     data_pairs = [(tp, input_types[tp]) for tp in INPUT_TYPE_COLORS if tp in input_types]
 
     pie = (
-        Pie(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="600px", height="400px"))
+        Pie(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="780px", height="450px"))
         .add(
             series_name="用例数",
             data_pair=data_pairs,
@@ -163,7 +164,7 @@ def create_avg_duration_bar(results: list[dict]) -> Bar:
         avgs.append(round(sum(times) / len(times)) if times else 0)
 
     bar = (
-        Bar(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="600px", height="400px"))
+        Bar(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="780px", height="450px"))
         .add_xaxis(categories)
         .add_yaxis(
             "平均耗时 (ms)",
@@ -258,7 +259,7 @@ def create_validation_bar(results: list[dict]) -> Bar:
     colors = [VALIDATION_COLORS.get(c, COLORS["slate"]) for c in categories]
 
     bar = (
-        Bar(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="600px", height="400px"))
+        Bar(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="780px", height="450px"))
         .add_xaxis(categories)
         .add_yaxis(
             "命中次数",
@@ -325,7 +326,7 @@ def create_category_input_stacked_bar(results: list[dict]) -> Bar:
             matrix[cat][tp] += 1
 
     bar = (
-        Bar(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="600px", height="400px"))
+        Bar(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="780px", height="450px"))
         .add_xaxis(cat_list)
     )
 
@@ -419,13 +420,13 @@ def render_dashboard_embed(results: list[dict]) -> str:
     body_match = re.search(r'<body[^>]*>(.*?)</body>', html, re.DOTALL)
     body_content = body_match.group(1) if body_match else ""
 
-    # 构建嵌入友好的 HTML（深色背景适配 Gradio）
+    # 构建嵌入友好的 HTML（Light 主题）
     embed_html = f"""
-    <div class="dashboard-embed" style="background:{COLORS['bg']};min-height:100vh;padding:20px;font-family:'Segoe UI',sans-serif;color:{COLORS['text']};">
+    <div class="dashboard-embed" style="background:#f1f5f9;min-height:100vh;padding:24px;font-family:'Segoe UI',sans-serif;color:{COLORS['text']};max-width:1600px;margin:0 auto;">
         <style>
             .chart-block {{ display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }}
-            .chart-block .chart-container {{ border-radius:12px; overflow:hidden; }}
-            @media (max-width: 900px) {{ .chart-block {{ grid-template-columns: 1fr; }} }}
+            .chart-block .chart-container {{ border-radius:12px; overflow:hidden; box-shadow:0 1px 3px rgba(0,0,0,0.08); }}
+            @media (max-width: 1000px) {{ .chart-block {{ grid-template-columns: 1fr; }} }}
         </style>
         <div class="chart-block">
             {body_content}
