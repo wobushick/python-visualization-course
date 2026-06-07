@@ -91,6 +91,9 @@ def _classify_input(username: str, password: str) -> str:
         return "安全攻击"
     if not username or not password:
         return "空值输入"
+    # 首尾空格是边界条件的一种
+    if username != username.strip() or password != password.strip():
+        return "边界值"
     if len(username) < 3 or len(username) > 20 or len(password) < 8 or len(password) > 20:
         return "边界值"
     if not username.replace("_", "").isalnum():
@@ -330,9 +333,13 @@ def create_category_input_stacked_bar(results: list[dict]) -> Bar:
         if cat in matrix:
             matrix[cat][tp] += 1
 
+    # 重命名 X 轴类别（避免与图例"边界值"输入类型混淆）
+    cat_rename = {"边界值": "边界值场景"}
+    x_labels = [cat_rename.get(c, c) for c in cat_list]
+
     bar = (
         Bar(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="780px", height="450px"))
-        .add_xaxis(cat_list)
+        .add_xaxis(x_labels)
     )
 
     # 每输入类型一个堆叠层（图例名含总数）
@@ -346,7 +353,7 @@ def create_category_input_stacked_bar(results: list[dict]) -> Bar:
             stack="总量",
             label_opts=opts.LabelOpts(
                 position="inside",
-                formatter=JsCode("function(p){return p.value >= 2 ? p.value : '';}"),
+                formatter=JsCode("function(p){return p.value >= 1 ? p.value : '';}"),
                 color="#fff",
                 font_size=11,
                 font_weight="bold",
