@@ -113,6 +113,9 @@ def create_category_pie(results: list[dict]) -> Pie:
 
     data_pairs = [(tp, input_types[tp]) for tp in INPUT_TYPE_COLORS if tp in input_types]
 
+    # 构建含计数的图例文本
+    legend_data = [f"{tp} ({input_types[tp]}条)" for tp in INPUT_TYPE_COLORS if tp in input_types]
+
     pie = (
         Pie(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="780px", height="450px"))
         .add(
@@ -181,7 +184,7 @@ def create_avg_duration_bar(results: list[dict]) -> Bar:
                 font_size=11,
             ),
             itemstyle_opts=opts.ItemStyleOpts(
-                border_radius=6,
+                border_radius=[6, 6, 0, 0],
                 color=COLORS["cyan"],
             ),
         )
@@ -261,6 +264,7 @@ def create_validation_bar(results: list[dict]) -> Bar:
     sorted_rules = sorted(rule_counts.items(), key=lambda x: x[1], reverse=True)
     categories = [r[0] for r in sorted_rules]
     counts = [r[1] for r in sorted_rules]
+    colors = [VALIDATION_COLORS.get(c, COLORS["slate"]) for c in categories]
 
     bar = (
         Bar(init_opts=opts.InitOpts(bg_color=COLORS["bg"], width="780px", height="450px"))
@@ -274,7 +278,7 @@ def create_validation_bar(results: list[dict]) -> Bar:
                 color=COLORS["text"],
                 font_size=12,
             ),
-            itemstyle_opts=opts.ItemStyleOpts(border_radius=6),
+            itemstyle_opts=opts.ItemStyleOpts(border_radius=[0, 6, 6, 0]),
         )
         .reversal_axis()
         .set_global_opts(
@@ -296,16 +300,15 @@ def create_validation_bar(results: list[dict]) -> Bar:
             ),
             tooltip_opts=opts.TooltipOpts(
                 trigger="axis",
-                formatter=JsCode(
-                    "function(x){"
-                    "var d=" + json.dumps({k: ", ".join(v) for k, v in rule_details.items()})
-                    + ";return x && x.length ? x[0].name + ': ' + x[0].value + ' 条<br>包含: ' + (d[x[0].name] || '') : '';"
-                    "}"
-                ),
+                formatter=lambda x: f"{x[0].name}: {x[0].value} 条<br>包含: {', '.join(rule_details.get(x[0].name, []))}" if x else "",
             ),
             legend_opts=opts.LegendOpts(is_show=False),
         )
     )
+    # 逐条设置颜色
+    for i, color in enumerate(colors):
+        bar.set_colors(color)
+    bar.set_colors(colors)
     return bar
 
 
