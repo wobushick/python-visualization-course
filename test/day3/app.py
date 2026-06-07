@@ -17,6 +17,7 @@ import shutil
 import subprocess
 import sys
 import time
+import webbrowser
 from pathlib import Path
 
 import gradio as gr
@@ -339,6 +340,24 @@ def handle_show_dashboard() -> str:
 # Tab 3: 手动测试登录页
 # ============================================================
 
+def handle_open_dashboard() -> str:
+    """生成可视化大屏并在浏览器中打开。"""
+    try:
+        results = load_test_results()
+        from test.day4.dashboard import OUTPUT_DIR as DASH_OUTPUT
+        dashboard_path = DASH_OUTPUT / "dashboard.html"
+        # 确保文件存在
+        if not dashboard_path.exists():
+            from test.day4.dashboard import build_dashboard
+            build_dashboard(results).render(str(dashboard_path))
+        webbrowser.open(str(dashboard_path))
+        return f"""<div style="padding:20px;text-align:center;color:#16a34a;">
+            ✅ 已在浏览器中打开<br><code>{dashboard_path}</code></div>"""
+    except Exception as e:
+        return f"""<div style="padding:20px;text-align:center;color:#ef4444;">
+            ❌ 打开失败: {e}</div>"""
+
+
 def handle_manual_login(username: str, password: str) -> tuple[str, str]:
     """处理手动登录测试。"""
     status, message = validate_login(username, password)
@@ -466,10 +485,16 @@ def build_ui():
                     gr.Markdown("### 📊 数据可视化大屏")
                     with gr.Row():
                         dashboard_btn = gr.Button("📊 生成可视化", elem_classes=["primary-btn"])
+                        open_btn = gr.Button("🔗 在浏览器打开", elem_classes=["run-btn"])
                     dashboard_html = gr.HTML("")
 
                     dashboard_btn.click(
                         fn=handle_show_dashboard,
+                        inputs=[],
+                        outputs=[dashboard_html],
+                    )
+                    open_btn.click(
+                        fn=handle_open_dashboard,
                         inputs=[],
                         outputs=[dashboard_html],
                     )
