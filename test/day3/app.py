@@ -36,12 +36,9 @@ from test.day2.login_page import validate_login
 
 # Day4 的可视化模块（Tab 2 集成）
 from test.day4.dashboard import (  # type: ignore
+    build_dashboard,
     load_results as load_test_results,
-    render_dashboard_embed,
 )
-
-# Day4 的可视化模块
-from test.day4.dashboard import render_dashboard_embed, load_results as load_dashboard_data
 
 # ============================================================
 # 路径配置
@@ -323,19 +320,6 @@ def handle_run_tests(headless: bool) -> tuple:
         return f"❌ 执行失败: {e}", pd.DataFrame(), str(e)
 
 
-def handle_show_dashboard() -> str:
-    """生成可视化大屏，返回可嵌入 Gradio 的 HTML。"""
-    try:
-        results = load_test_results()
-        return render_dashboard_embed(results)
-    except FileNotFoundError as e:
-        return f"""<div style="padding:40px;text-align:center;color:#64748b;">
-            <p>⚠️ {e}</p></div>"""
-    except Exception as e:
-        return f"""<div style="padding:40px;text-align:center;color:#ef4444;">
-            <p>❌ 生成失败: {e}</p></div>"""
-
-
 # ============================================================
 # Tab 3: 手动测试登录页
 # ============================================================
@@ -346,13 +330,9 @@ def handle_open_dashboard() -> str:
         results = load_test_results()
         from test.day4.dashboard import OUTPUT_DIR as DASH_OUTPUT
         dashboard_path = DASH_OUTPUT / "dashboard.html"
-        # 确保文件存在
-        if not dashboard_path.exists():
-            from test.day4.dashboard import build_dashboard
-            build_dashboard(results).render(str(dashboard_path))
+        build_dashboard(results).render(str(dashboard_path))
         webbrowser.open(str(dashboard_path))
-        return f"""<div style="padding:20px;text-align:center;color:#16a34a;">
-            ✅ 已在浏览器中打开<br><code>{dashboard_path}</code></div>"""
+        return ""
     except Exception as e:
         return f"""<div style="padding:20px;text-align:center;color:#ef4444;">
             ❌ 打开失败: {e}</div>"""
@@ -483,17 +463,10 @@ def build_ui():
                 # 可视化大屏（独立卡片）
                 with gr.Column(elem_classes=["card-container"]):
                     gr.Markdown("### 📊 数据可视化大屏")
-                    with gr.Row():
-                        dashboard_btn = gr.Button("📊 生成可视化", elem_classes=["primary-btn"])
-                        open_btn = gr.Button("🔗 在浏览器打开", elem_classes=["run-btn"])
+                    dashboard_btn = gr.Button("🔗 在浏览器打开", elem_classes=["primary-btn"])
                     dashboard_html = gr.HTML("")
 
                     dashboard_btn.click(
-                        fn=handle_show_dashboard,
-                        inputs=[],
-                        outputs=[dashboard_html],
-                    )
-                    open_btn.click(
                         fn=handle_open_dashboard,
                         inputs=[],
                         outputs=[dashboard_html],
