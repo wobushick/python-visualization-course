@@ -181,7 +181,7 @@ def create_avg_duration_bar(results: list[dict]) -> Bar:
                 font_size=11,
             ),
             itemstyle_opts=opts.ItemStyleOpts(
-                border_radius=[6, 6, 0, 0],
+                border_radius=[6, 6, 0, 0], # type: ignore
                 color=COLORS["cyan"],
             ),
         )
@@ -275,7 +275,7 @@ def create_validation_bar(results: list[dict]) -> Bar:
                 color=COLORS["text"],
                 font_size=12,
             ),
-            itemstyle_opts=opts.ItemStyleOpts(border_radius=[0, 6, 6, 0]),
+            itemstyle_opts=opts.ItemStyleOpts(border_radius=[0, 6, 6, 0]), # type: ignore
         )
         .reversal_axis()
         .set_global_opts(
@@ -297,7 +297,7 @@ def create_validation_bar(results: list[dict]) -> Bar:
             ),
             tooltip_opts=opts.TooltipOpts(
                 trigger="axis",
-                formatter=lambda x: f"{x[0].name}: {x[0].value} 条<br>包含: {', '.join(rule_details.get(x[0].name, []))}" if x else "",
+                formatter=lambda x: f"{x[0].name}: {x[0].value} 条<br>包含: {', '.join(rule_details.get(x[0].name, []))}" if x else "", # type: ignore
             ),
             legend_opts=opts.LegendOpts(is_show=False),
         )

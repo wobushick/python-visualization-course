@@ -35,6 +35,14 @@ HEADLESS=1 pytest -v            # 无头模式（CI/服务器）
 
 pytest 自动启动 HTTP 服务器托管 `test/day2/login.html`，然后在 Chrome 中运行 30 条测试用例。结果写入 `test/day2/selenium/test_results.json`，失败时截图保存到 `screenshots/`。
 
+运行单个测试类或特定测试：
+```bash
+cd test/day2/selenium
+pytest -v -k "TestNormalLogin"          # 只运行正常登录
+pytest -v -k "bob_01"                   # 运行包含 "bob_01" 的测试
+HEADLESS=1 pytest -v -k "TestSecurity"  # 无头模式运行安全测试
+```
+
 **Day3 — Gradio 统一平台（端口 7863）：**
 
 ```bash
@@ -56,15 +64,19 @@ python test/day4/dashboard.py
 # → 输出 test/day4/output/dashboard.html
 ```
 
-读取 Selenium 测试结果 JSON，生成 4 张图表：
+读取 Selenium 测试结果 JSON（优先 `day3/output/` → 回退 `day2/selenium/`），生成 4 张图表：
 | # | 类型 | 内容 |
 |---|------|------|
-| 1 | 饼图（玫瑰图） | 测试用例分类分布 |
+| 1 | 饼图（玫瑰图） | 测试输入类型分布 — 按 (用户名, 密码) 特征分 5 类 |
 | 2 | 柱状图 | 各类别平均执行耗时 |
-| 3 | 柱状图 | 各类别用例数量统计 |
-| 4 | 折线图（含平均线） | 各用例执行耗时 |
+| 3 | 水平柱状图 | 验证结果分布 — `actual_output` 归一化为 6 种校验规则 |
+| 4 | 堆叠柱状图 | 各类别输入类型构成 — 测试类别 × 输入类型交叉分析 |
 
-深色主题配色，通过 `Page` 整合为单一 HTML。同时集成到 Day3 Tab 2 的「📊 生成可视化」按钮中（使用 `render_dashboard_embed()` 内嵌到 Gradio）。
+Light 主题配色，通过 `Page` 整合为单一 HTML。同时集成到 Day3 Tab 2 的「📊 生成可视化」按钮中（使用 `render_dashboard_embed()` 内嵌到 Gradio）。
+
+图表核心分析逻辑在 `dashboard.py` 中：
+- **`_classify_input(username, password)`**：将每条用例按输入特征分为「正常合法」「安全攻击」「边界值」「空值输入」「格式异常」5 类。检查逻辑：先匹配 SQL 注入/XSS 关键词 → 空值 → 首尾空格/长度/特殊字符/密码复杂度。
+- **`_normalize_output(actual_output)`**：将原始 `actual_output` 匹配到 6 种归一化校验规则（`VALIDATION_RULES` 字典）：登录成功、格式校验失败、长度校验失败、空值校验失败、账号不匹配、安全拦截。
 
 ### 登录页面
 
@@ -111,8 +123,8 @@ test/
 - **`test/day2/selenium/conftest.py`**：pytest session fixtures。提供 `driver`（全局共享 Chrome 实例，eager 页面加载策略）、`app_url`（自动找可用端口启动 HTTP 服务器）、`wait`（WebDriverWait 封装）、`result_collector`（收集测试结果并在 session 结束时写入 JSON）。
 - **`test/day2/selenium/test_login.py`**：30 条 parametrized 测试，分 5 个类 — `TestNormalLogin`（5）、`TestUsernameAbnormal`（7）、`TestPasswordAbnormal`（7）、`TestSecurity`（5）、`TestBoundary`（6）。每个测试记录耗时、截图和实际输出到 `result_collector`。
 - **`test/day3/app.py`**：Gradio 三 Tab 界面。Tab 1 调用 `test_case_gen.py` 通过 DeepSeek 生成用例（generator 模式实现加载态）；Tab 2 通过 `subprocess.run("pytest")` 执行 Selenium 测试并解析 `test_results.json`；Tab 3 直接 import Day2 的 `validate_login` 函数。API Key 从 `.env` 后台读取，不暴露在 UI。结果副本存入 `test/day3/output/`。
-- **`test/day4/dashboard.py`**：读取 `test_results.json`，用 pyecharts 生成 4 张图表（Pie/Bar/Bar/Line），通过 `Page` 整合为独立 HTML，同时提供 `render_dashboard_embed()` 供 Day3 Gradio 嵌入使用。
-- **登录验证规则**：用户名 3-20 位字母/数字/下划线；密码 8-20 位，必须含大小写字母和数字；SQL 注入和 XSS 模式检测；空格被 trim 处理。
+- **`test/day4/dashboard.py`**：读取 `test_results.json`（优先 `day3/output/` → 回退 `day2/selenium/`），用 pyecharts 生成 4 张图表（Pie/Bar/Bar/Bar），通过 `Page` 整合为独立 HTML，同时提供 `render_dashboard_embed()` 供 Day3 Gradio 嵌入使用。核心分析函数：`_classify_input()` 将输入分为 5 类，`_normalize_output()` 将 `actual_output` 归一化为 6 种校验规则。
+- **登录验证规则**（`login.html` JS `validate()` 函数，按执行顺序）：1) trim 后检查空值；2) 用户名长度 3-20；3) 用户名格式 `/^[a-zA-Z0-9_]+$/`；4) 密码长度 8-20；5) 密码必须含大小写字母和数字 `/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/`；6) SQL 注入关键词检测（`' OR `, `'; --`, `DROP `, `DELETE `, `UNION SELECT`, `1=1`）；7) XSS 模式检测（`<script`, `javascript:`, `onerror=`, `onclick=`）；8) 账号匹配（5 个硬编码账号，比对密码）。注意：空格在步骤 1 被 trim，因此首尾空格被视为空值。
 
 ## 关键约定
 
