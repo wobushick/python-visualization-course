@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-opacity="0.08" />
+    </filter>
+  </defs>
+  
+  
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  
+  
+  <rect x="0" y="0" width="1280" height="80" fill="#F8FAFC" />
+  <text x="60" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#94A3B8">03</text>
+  <text x="100" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" font-weight="700" fill="#1E293B">系统架构</text>
+  
+  
+  <text x="60" y="130" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" fill="#64748B">技术栈</text>
+  
+  
+  <path fill="#0EA5E9" opacity="0.1" d="M76,150 H144 A16,16 0 0 1 160,166 V166 A16,16 0 0 1 144,182 H76 A16,16 0 0 1 60,166 V166 A16,16 0 0 1 76,150 Z" />
+  <text x="110" y="171" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#0EA5E9" text-anchor="middle">Python</text>
+  
+  <path fill="#0EA5E9" opacity="0.1" d="M186,150 H274 A16,16 0 0 1 290,166 V166 A16,16 0 0 1 274,182 H186 A16,16 0 0 1 170,166 V166 A16,16 0 0 1 186,150 Z" />
+  <text x="230" y="171" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#0EA5E9" text-anchor="middle">DeepSeek API</text>
+  
+  <path fill="#0EA5E9" opacity="0.1" d="M316,150 H364 A16,16 0 0 1 380,166 V166 A16,16 0 0 1 364,182 H316 A16,16 0 0 1 300,166 V166 A16,16 0 0 1 316,150 Z" />
+  <text x="340" y="171" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#0EA5E9" text-anchor="middle">Gradio</text>
+  
+  <path fill="#0EA5E9" opacity="0.1" d="M406,150 H474 A16,16 0 0 1 490,166 V166 A16,16 0 0 1 474,182 H406 A16,16 0 0 1 390,166 V166 A16,16 0 0 1 406,150 Z" />
+  <text x="440" y="171" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#0EA5E9" text-anchor="middle">Selenium</text>
+  
+  <path fill="#0EA5E9" opacity="0.1" d="M516,150 H564 A16,16 0 0 1 580,166 V166 A16,16 0 0 1 564,182 H516 A16,16 0 0 1 500,166 V166 A16,16 0 0 1 516,150 Z" />
+  <text x="540" y="171" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#0EA5E9" text-anchor="middle">pytest</text>
+  
+  <path fill="#0EA5E9" opacity="0.1" d="M606,150 H674 A16,16 0 0 1 690,166 V166 A16,16 0 0 1 674,182 H606 A16,16 0 0 1 590,166 V166 A16,16 0 0 1 606,150 Z" />
+  <text x="640" y="171" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#0EA5E9" text-anchor="middle">pyecharts</text>
+  
+  
+  <text x="60" y="230" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" fill="#64748B">系统流程</text>
+  
+  
+  
+  <path fill="#0EA5E9" d="M72,260 H228 A12,12 0 0 1 240,272 V328 A12,12 0 0 1 228,340 H72 A12,12 0 0 1 60,328 V272 A12,12 0 0 1 72,260 Z" />
+  <text x="150" y="295" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">DeepSeek API</text>
+  <text x="150" y="315" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#FFFFFF" text-anchor="middle" opacity="0.8">LLM 生成用例</text>
+  
+  
+  <path d="M250 300 L290 300" stroke="#0EA5E9" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0EA5E9" />
+    </marker>
+  </defs>
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M312,260 H468 A12,12 0 0 1 480,272 V328 A12,12 0 0 1 468,340 H312 A12,12 0 0 1 300,328 V272 A12,12 0 0 1 312,260 Z" />
+  <text x="390" y="295" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">Day1</text>
+  <text x="390" y="315" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">测试用例生成</text>
+  
+  
+  <path d="M490 300 L530 300" stroke="#0EA5E9" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+  
+  
+  <path fill="#F59E0B" opacity="0.1" d="M552,260 H708 A12,12 0 0 1 720,272 V328 A12,12 0 0 1 708,340 H552 A12,12 0 0 1 540,328 V272 A12,12 0 0 1 552,260 Z" />
+  <text x="630" y="295" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#F59E0B" text-anchor="middle">Excel / MD</text>
+  <text x="630" y="315" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#F59E0B" text-anchor="middle" opacity="0.8">结构化用例</text>
+  
+  
+  <path d="M730 300 L770 300" stroke="#0EA5E9" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M792,260 H948 A12,12 0 0 1 960,272 V328 A12,12 0 0 1 948,340 H792 A12,12 0 0 1 780,328 V272 A12,12 0 0 1 792,260 Z" />
+  <text x="870" y="295" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">Day2</text>
+  <text x="870" y="315" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">Selenium 测试</text>
+  
+  
+  <path d="M970 300 L1010 300" stroke="#0EA5E9" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+  
+  
+  <path fill="#8B5CF6" opacity="0.1" d="M1032,260 H1188 A12,12 0 0 1 1200,272 V328 A12,12 0 0 1 1188,340 H1032 A12,12 0 0 1 1020,328 V272 A12,12 0 0 1 1032,260 Z" />
+  <text x="1110" y="295" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#8B5CF6" text-anchor="middle">JSON</text>
+  <text x="1110" y="315" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#8B5CF6" text-anchor="middle" opacity="0.8">测试结果</text>
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M312,400 H548 A12,12 0 0 1 560,412 V488 A12,12 0 0 1 548,500 H312 A12,12 0 0 1 300,488 V412 A12,12 0 0 1 312,400 Z" />
+  <text x="430" y="440" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" font-weight="600" fill="#1E293B" text-anchor="middle">Day3</text>
+  <text x="430" y="465" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">Gradio 统一平台</text>
+  <text x="430" y="485" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">生成 + 测试 + 手动验证</text>
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M632,400 H868 A12,12 0 0 1 880,412 V488 A12,12 0 0 1 868,500 H632 A12,12 0 0 1 620,488 V412 A12,12 0 0 1 632,400 Z" />
+  <text x="750" y="440" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" font-weight="600" fill="#1E293B" text-anchor="middle">Day4</text>
+  <text x="750" y="465" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">pyecharts 可视化</text>
+  <text x="750" y="485" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">4 类图表分析</text>
+  
+  
+  <rect x="0" y="680" width="1280" height="40" fill="#F8FAFC" />
+  <text x="60" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">基于 LLM 协同辅助自动化测试</text>
+  <text x="1220" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8" text-anchor="end">4 / 11</text>
+</svg>

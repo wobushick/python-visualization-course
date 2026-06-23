@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-opacity="0.08" />
+    </filter>
+  </defs>
+  
+  
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  
+  
+  <rect x="0" y="0" width="1280" height="80" fill="#F8FAFC" />
+  <text x="60" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#94A3B8">07</text>
+  <text x="100" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" font-weight="700" fill="#1E293B">Day4 — pyecharts 可视化</text>
+  
+  
+  <text x="60" y="130" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" fill="#64748B">读取测试结果，生成 4 类图表可视化大屏</text>
+  
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M72,170 H328 A12,12 0 0 1 340,182 V358 A12,12 0 0 1 328,370 H72 A12,12 0 0 1 60,358 V182 A12,12 0 0 1 72,170 Z" />
+  <circle cx="200" cy="230" r="40" fill="#0EA5E9" opacity="0.1" />
+  <text x="200" y="236" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" fill="#0EA5E9" text-anchor="middle" dominant-baseline="middle">📊</text>
+  <text x="200" y="290" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">输入类型分布</text>
+  <text x="200" y="315" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">玫瑰图</text>
+  <text x="200" y="340" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">5 类输入特征</text>
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M392,170 H648 A12,12 0 0 1 660,182 V358 A12,12 0 0 1 648,370 H392 A12,12 0 0 1 380,358 V182 A12,12 0 0 1 392,170 Z" />
+  <circle cx="520" cy="230" r="40" fill="#F59E0B" opacity="0.1" />
+  <text x="520" y="236" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" fill="#F59E0B" text-anchor="middle" dominant-baseline="middle">⏱</text>
+  <text x="520" y="290" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">平均执行耗时</text>
+  <text x="520" y="315" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">柱状图</text>
+  <text x="520" y="340" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">各类别对比</text>
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M712,170 H968 A12,12 0 0 1 980,182 V358 A12,12 0 0 1 968,370 H712 A12,12 0 0 1 700,358 V182 A12,12 0 0 1 712,170 Z" />
+  <circle cx="840" cy="230" r="40" fill="#8B5CF6" opacity="0.1" />
+  <text x="840" y="236" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" fill="#8B5CF6" text-anchor="middle" dominant-baseline="middle">✅</text>
+  <text x="840" y="290" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">验证结果分布</text>
+  <text x="840" y="315" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">水平柱状图</text>
+  <text x="840" y="340" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">6 种校验规则</text>
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M1032,170 H1208 A12,12 0 0 1 1220,182 V358 A12,12 0 0 1 1208,370 H1032 A12,12 0 0 1 1020,358 V182 A12,12 0 0 1 1032,170 Z" />
+  <circle cx="1120" cy="230" r="40" fill="#16A34A" opacity="0.1" />
+  <text x="1120" y="236" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" fill="#16A34A" text-anchor="middle" dominant-baseline="middle">📈</text>
+  <text x="1120" y="290" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">类别×输入</text>
+  <text x="1120" y="315" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">堆叠柱状图</text>
+  <text x="1120" y="340" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">交叉分析</text>
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M72,400 H1208 A12,12 0 0 1 1220,412 V628 A12,12 0 0 1 1208,640 H72 A12,12 0 0 1 60,628 V412 A12,12 0 0 1 72,400 Z" />
+  <text x="100" y="440" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" font-weight="600" fill="#1E293B">数据源优先级</text>
+  
+  
+  <path fill="#0EA5E9" opacity="0.1" d="M108,470 H392 A8,8 0 0 1 400,478 V522 A8,8 0 0 1 392,530 H108 A8,8 0 0 1 100,522 V478 A8,8 0 0 1 108,470 Z" />
+  <text x="250" y="505" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#0EA5E9" text-anchor="middle">① day3/output/test_results.json</text>
+  
+  <path d="M410 500 L450 500" stroke="#0EA5E9" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0EA5E9" />
+    </marker>
+  </defs>
+  
+  <path fill="#F59E0B" opacity="0.1" d="M468,470 H752 A8,8 0 0 1 760,478 V522 A8,8 0 0 1 752,530 H468 A8,8 0 0 1 460,522 V478 A8,8 0 0 1 468,470 Z" />
+  <text x="610" y="505" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#F59E0B" text-anchor="middle">② day2/selenium/test_results.json</text>
+  
+  <text x="100" y="570" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 核心分析函数：_classify_input()（5 类输入）、_normalize_output()（6 种校验规则）</text>
+  <text x="100" y="595" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• Light 主题配色，通过 Page 整合为单一 HTML</text>
+  <text x="100" y="620" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 同时集成到 Day3 Tab 2 的「生成可视化」按钮中</text>
+  
+  
+  <rect x="0" y="680" width="1280" height="40" fill="#F8FAFC" />
+  <text x="60" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">基于 LLM 协同辅助自动化测试</text>
+  <text x="1220" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8" text-anchor="end">8 / 11</text>
+</svg>

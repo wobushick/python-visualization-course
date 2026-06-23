@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-opacity="0.08" />
+    </filter>
+  </defs>
+  
+  
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  
+  
+  <rect x="0" y="0" width="1280" height="80" fill="#F8FAFC" />
+  <text x="60" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#94A3B8">06</text>
+  <text x="100" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" font-weight="700" fill="#1E293B">Day3 — Gradio 统一平台</text>
+  
+  
+  <text x="60" y="130" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" fill="#64748B">一站式 Web 界面，集成 Day1 + Day2 + Day4</text>
+  
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M72,170 H408 A12,12 0 0 1 420,182 V378 A12,12 0 0 1 408,390 H72 A12,12 0 0 1 60,378 V182 A12,12 0 0 1 72,170 Z" />
+  <path fill="#0EA5E9" d="M72,170 H408 A12,12 0 0 1 420,182 V198 A12,12 0 0 1 408,210 H72 A12,12 0 0 1 60,198 V182 A12,12 0 0 1 72,170 Z" />
+  <text x="240" y="196" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">Tab 1: 生成测试用例</text>
+  <text x="100" y="250" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 配置格式要求、模型、提示词</text>
+  <text x="100" y="275" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 调用 DeepSeek API 生成</text>
+  <text x="100" y="300" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 展示 Markdown + 下载 Excel</text>
+  <text x="100" y="325" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• Generator 模式实现加载态</text>
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M472,170 H808 A12,12 0 0 1 820,182 V378 A12,12 0 0 1 808,390 H472 A12,12 0 0 1 460,378 V182 A12,12 0 0 1 472,170 Z" />
+  <path fill="#F59E0B" d="M472,170 H808 A12,12 0 0 1 820,182 V198 A12,12 0 0 1 808,210 H472 A12,12 0 0 1 460,198 V182 A12,12 0 0 1 472,170 Z" />
+  <text x="640" y="196" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">Tab 2: 执行自动化测试</text>
+  <text x="500" y="250" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 选择有头/无头模式</text>
+  <text x="500" y="275" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• subprocess 调用 pytest</text>
+  <text x="500" y="300" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 展示结果 DataFrame</text>
+  <text x="500" y="325" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 一键打开可视化大屏</text>
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M872,170 H1208 A12,12 0 0 1 1220,182 V378 A12,12 0 0 1 1208,390 H872 A12,12 0 0 1 860,378 V182 A12,12 0 0 1 872,170 Z" />
+  <path fill="#8B5CF6" d="M872,170 H1208 A12,12 0 0 1 1220,182 V198 A12,12 0 0 1 1208,210 H872 A12,12 0 0 1 860,198 V182 A12,12 0 0 1 872,170 Z" />
+  <text x="1040" y="196" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF" text-anchor="middle">Tab 3: 手动测试登录</text>
+  <text x="900" y="250" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 输入用户名/密码验证</text>
+  <text x="900" y="275" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 复用 Day2 验证逻辑</text>
+  <text x="900" y="300" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 快捷填入测试账号</text>
+  <text x="900" y="325" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 实时显示验证结果</text>
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M72,420 H1208 A12,12 0 0 1 1220,432 V628 A12,12 0 0 1 1208,640 H72 A12,12 0 0 1 60,628 V432 A12,12 0 0 1 72,420 Z" />
+  <text x="100" y="460" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" font-weight="600" fill="#1E293B">平台特性</text>
+  
+  <text x="100" y="500" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 端口 7863，深色奢华主题</text>
+  <text x="100" y="525" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• API Key 从 .env 后台读取，不暴露在 UI</text>
+  <text x="100" y="550" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 测试结果副本存入 day3/output/</text>
+  <text x="100" y="575" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 同时启动 dashboard 静态服务器（端口 7864）</text>
+  
+  <text x="640" y="500" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• WSL2 适配：rundll32 打开 Windows 浏览器</text>
+  <text x="640" y="525" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• pytest 超时保护（300 秒）</text>
+  <text x="640" y="550" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 结果自动同步到 day3/output/</text>
+  <text x="640" y="575" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 支持自定义提示词模板</text>
+  
+  
+  <rect x="0" y="680" width="1280" height="40" fill="#F8FAFC" />
+  <text x="60" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">基于 LLM 协同辅助自动化测试</text>
+  <text x="1220" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8" text-anchor="end">7 / 11</text>
+</svg>

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="titleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0EA5E9"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <radialGradient id="bgDecor" cx="80%" cy="20%" r="50%">
+      <stop offset="0%" stop-color="#0EA5E9" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0EA5E9" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  <rect width="1280" height="720" fill="url(#bgDecor)"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="1200" cy="100" r="80" fill="#0EA5E9" opacity="0.08"/>
+  <circle cx="100" cy="600" r="60" fill="#8B5CF6" opacity="0.08"/>
+  
+  <!-- Title card -->
+  <rect x="80" y="180" width="1120" height="360" rx="16" fill="#F8FAFC" filter="url(#cardShadow)"/>
+  
+  <!-- Title accent bar -->
+  <rect x="80" y="180" width="8" height="360" rx="4" fill="url(#titleGradient)"/>
+  
+  <!-- Main title -->
+  <text x="140" y="280" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="36" font-weight="700" fill="#1E293B">基于 LLM 协同辅助自动化测试的</text>
+  <text x="140" y="330" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="36" font-weight="700" fill="#1E293B">登录测试用例生成与分析系统</text>
+  
+  <!-- Subtitle -->
+  <text x="140" y="390" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="18" fill="#64748B">使用 DeepSeek API、Selenium、Gradio 与 pyecharts 构建自动化测试闭环</text>
+  
+  <!-- Divider line -->
+  <line x1="140" y1="420" x2="400" y2="420" stroke="#E2E8F0" stroke-width="1"/>
+  
+  <!-- Author info -->
+  <text x="140" y="460" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#94A3B8">课程答辩 | 2026年6月</text>
+  
+  <!-- Bottom decorative bar -->
+  <rect x="0" y="680" width="1280" height="40" fill="url(#titleGradient)" opacity="0.9"/>
+</svg>

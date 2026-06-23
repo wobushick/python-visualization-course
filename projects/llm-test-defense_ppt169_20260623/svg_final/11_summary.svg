@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="titleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0EA5E9" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+    <radialGradient id="bgDecor" cx="20%" cy="80%" r="50%">
+      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0" />
+    </radialGradient>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-opacity="0.08" />
+    </filter>
+  </defs>
+  
+  
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  <rect width="1280" height="720" fill="url(#bgDecor)" />
+  
+  
+  <circle cx="80" cy="100" r="60" fill="#0EA5E9" opacity="0.08" />
+  <circle cx="1200" cy="620" r="80" fill="#8B5CF6" opacity="0.08" />
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M216,160 H1064 A16,16 0 0 1 1080,176 V544 A16,16 0 0 1 1064,560 H216 A16,16 0 0 1 200,544 V176 A16,16 0 0 1 216,160 Z" />
+  
+  
+  <text x="640" y="240" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="32" font-weight="700" fill="#1E293B" text-anchor="middle">总结</text>
+  
+  
+  <line x1="300" y1="270" x2="980" y2="270" stroke="#E2E8F0" stroke-width="1" />
+  
+  
+  <text x="640" y="320" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="18" fill="#64748B" text-anchor="middle">本项目围绕登录功能测试，实现了完整的测试辅助闭环</text>
+  
+  
+  <path fill="#0EA5E9" opacity="0.1" d="M292,360 H468 A12,12 0 0 1 480,372 V448 A12,12 0 0 1 468,460 H292 A12,12 0 0 1 280,448 V372 A12,12 0 0 1 292,360 Z" />
+  <text x="380" y="400" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" font-weight="600" fill="#0EA5E9" text-anchor="middle">LLM</text>
+  <text x="380" y="425" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">测试用例生成</text>
+  
+  <text x="500" y="410" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" fill="#94A3B8">+</text>
+  
+  <path fill="#F59E0B" opacity="0.1" d="M552,360 H728 A12,12 0 0 1 740,372 V448 A12,12 0 0 1 728,460 H552 A12,12 0 0 1 540,448 V372 A12,12 0 0 1 552,360 Z" />
+  <text x="640" y="400" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" font-weight="600" fill="#F59E0B" text-anchor="middle">Selenium</text>
+  <text x="640" y="425" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">自动化测试执行</text>
+  
+  <text x="760" y="410" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" fill="#94A3B8">+</text>
+  
+  <path fill="#8B5CF6" opacity="0.1" d="M812,360 H988 A12,12 0 0 1 1000,372 V448 A12,12 0 0 1 988,460 H812 A12,12 0 0 1 800,448 V372 A12,12 0 0 1 812,360 Z" />
+  <text x="900" y="400" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" font-weight="600" fill="#8B5CF6" text-anchor="middle">pyecharts</text>
+  <text x="900" y="425" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#64748B" text-anchor="middle">结果可视化分析</text>
+  
+  
+  <text x="640" y="500" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#94A3B8" text-anchor="middle">为登录功能测试提供了一个可演示、可扩展、可复用的辅助系统</text>
+  
+  
+  <text x="640" y="620" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" font-weight="600" fill="url(#titleGradient)" text-anchor="middle">感谢聆听</text>
+  <text x="640" y="650" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#94A3B8" text-anchor="middle">请各位老师批评指正</text>
+  
+  
+  <rect x="0" y="680" width="1280" height="40" fill="url(#titleGradient)" opacity="0.9" />
+</svg>

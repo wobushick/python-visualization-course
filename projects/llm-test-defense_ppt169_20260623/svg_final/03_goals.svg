@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-opacity="0.08" />
+    </filter>
+    <linearGradient id="goalGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0EA5E9" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+  </defs>
+  
+  
+  <rect width="1280" height="720" fill="#FFFFFF" />
+  
+  
+  <rect x="0" y="0" width="1280" height="80" fill="#F8FAFC" />
+  <text x="60" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#94A3B8">02</text>
+  <text x="100" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" font-weight="700" fill="#1E293B">项目目标</text>
+  
+  
+  <text x="60" y="130" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" fill="#64748B">构建完整的测试辅助闭环</text>
+  
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M72,180 H248 A12,12 0 0 1 260,192 V308 A12,12 0 0 1 248,320 H72 A12,12 0 0 1 60,308 V192 A12,12 0 0 1 72,180 Z" />
+  <circle cx="160" cy="220" r="20" fill="#0EA5E9" />
+  <text x="160" y="226" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle">1</text>
+  <text x="160" y="260" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">自动生成</text>
+  <text x="160" y="280" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">登录测试用例</text>
+  
+  
+  <path d="M270 250 L290 250" stroke="#0EA5E9" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0EA5E9" />
+    </marker>
+  </defs>
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M312,180 H488 A12,12 0 0 1 500,192 V308 A12,12 0 0 1 488,320 H312 A12,12 0 0 1 300,308 V192 A12,12 0 0 1 312,180 Z" />
+  <circle cx="400" cy="220" r="20" fill="#0EA5E9" />
+  <text x="400" y="226" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle">2</text>
+  <text x="400" y="260" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">自动执行</text>
+  <text x="400" y="280" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">Selenium 测试</text>
+  
+  
+  <path d="M510 250 L530 250" stroke="#0EA5E9" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M552,180 H728 A12,12 0 0 1 740,192 V308 A12,12 0 0 1 728,320 H552 A12,12 0 0 1 540,308 V192 A12,12 0 0 1 552,180 Z" />
+  <circle cx="640" cy="220" r="20" fill="#0EA5E9" />
+  <text x="640" y="226" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle">3</text>
+  <text x="640" y="260" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">自动收集</text>
+  <text x="640" y="280" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">测试结果</text>
+  
+  
+  <path d="M750 250 L770 250" stroke="#0EA5E9" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M792,180 H968 A12,12 0 0 1 980,192 V308 A12,12 0 0 1 968,320 H792 A12,12 0 0 1 780,308 V192 A12,12 0 0 1 792,180 Z" />
+  <circle cx="880" cy="220" r="20" fill="#0EA5E9" />
+  <text x="880" y="226" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle">4</text>
+  <text x="880" y="260" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">自动生成</text>
+  <text x="880" y="280" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">可视化分析</text>
+  
+  
+  <path d="M990 250 L1010 250" stroke="#0EA5E9" stroke-width="2" fill="none" marker-end="url(#arrowhead)" />
+  
+  
+  <path fill="#F8FAFC" filter="url(#cardShadow)" d="M1032,180 H1208 A12,12 0 0 1 1220,192 V308 A12,12 0 0 1 1208,320 H1032 A12,12 0 0 1 1020,308 V192 A12,12 0 0 1 1032,180 Z" />
+  <circle cx="1120" cy="220" r="20" fill="#8B5CF6" />
+  <text x="1120" y="226" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle">5</text>
+  <text x="1120" y="260" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">提供统一</text>
+  <text x="1120" y="280" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" font-weight="600" fill="#1E293B" text-anchor="middle">操作界面</text>
+  
+  
+  <path d="M1120 330 Q1120 400 640 400 Q160 400 160 330" stroke="url(#goalGradient)" stroke-width="2" fill="none" stroke-dasharray="8,4" />
+  <text x="640" y="420" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B" text-anchor="middle">完整闭环</text>
+  
+  
+  <path fill="#0EA5E9" opacity="0.05" d="M72,480 H1208 A12,12 0 0 1 1220,492 V568 A12,12 0 0 1 1208,580 H72 A12,12 0 0 1 60,568 V492 A12,12 0 0 1 72,480 Z" />
+  <text x="100" y="520" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" font-weight="600" fill="#0EA5E9">🎯 核心目标</text>
+  <text x="100" y="550" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#1E293B">不是单纯调用大模型，而是构建从用例生成、自动化执行到结果可视化的完整测试辅助闭环</text>
+  
+  
+  <rect x="0" y="680" width="1280" height="40" fill="#F8FAFC" />
+  <text x="60" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">基于 LLM 协同辅助自动化测试</text>
+  <text x="1220" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8" text-anchor="end">3 / 11</text>
+</svg>

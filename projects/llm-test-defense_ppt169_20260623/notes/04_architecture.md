@@ -1,0 +1,1 @@
+系统主要分为四个部分。第一部分是 Day1，用于调用 DeepSeek API 生成测试用例，并保存为 Markdown 和 Excel。第二部分是 Day2，使用 Selenium 对登录页面执行自动化测试。第三部分是 Day3，使用 Gradio 将生成测试用例和执行自动化测试整合到一个 Web 界面中。第四部分是 Day4，读取测试结果并生成 pyecharts 可视化大屏。

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  
+  <!-- Header -->
+  <rect x="0" y="0" width="1280" height="80" fill="#F8FAFC"/>
+  <text x="60" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#94A3B8">04</text>
+  <text x="100" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" font-weight="700" fill="#1E293B">Day1 — LLM 生成测试用例</text>
+  
+  <!-- Content -->
+  <text x="60" y="130" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" fill="#64748B">调用 DeepSeek API 生成结构化测试用例</text>
+  
+  <!-- Left panel - Flow -->
+  <rect x="60" y="170" width="560" height="420" rx="12" fill="#F8FAFC" filter="url(#cardShadow)"/>
+  <text x="100" y="210" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" font-weight="600" fill="#1E293B">执行流程</text>
+  
+  <!-- Flow steps -->
+  <rect x="100" y="240" width="480" height="60" rx="8" fill="#0EA5E9" opacity="0.1"/>
+  <text x="120" y="275" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#0EA5E9">1</text>
+  <text x="150" y="275" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#1E293B">加载 .env 配置（API Key、Base URL、Model）</text>
+  
+  <rect x="100" y="320" width="480" height="60" rx="8" fill="#0EA5E9" opacity="0.1"/>
+  <text x="120" y="355" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#0EA5E9">2</text>
+  <text x="150" y="355" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#1E293B">构造提示词（字段要求 + 测试场景要求）</text>
+  
+  <rect x="100" y="400" width="480" height="60" rx="8" fill="#0EA5E9" opacity="0.1"/>
+  <text x="120" y="435" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#0EA5E9">3</text>
+  <text x="150" y="435" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#1E293B">调用 API 生成 Markdown 表格</text>
+  
+  <rect x="100" y="480" width="480" height="60" rx="8" fill="#0EA5E9" opacity="0.1"/>
+  <text x="120" y="515" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#0EA5E9">4</text>
+  <text x="150" y="515" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#1E293B">解析表格 → 保存 Excel + Markdown</text>
+  
+  <!-- Right panel - Output -->
+  <rect x="660" y="170" width="560" height="200" rx="12" fill="#F8FAFC" filter="url(#cardShadow)"/>
+  <text x="700" y="210" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" font-weight="600" fill="#1E293B">输出文件</text>
+  
+  <rect x="700" y="240" width="200" height="60" rx="8" fill="#F59E0B" opacity="0.1"/>
+  <text x="800" y="275" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#F59E0B" text-anchor="middle">testcases.xlsx</text>
+  
+  <rect x="920" y="240" width="200" height="60" rx="8" fill="#8B5CF6" opacity="0.1"/>
+  <text x="1020" y="275" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#8B5CF6" text-anchor="middle">testcases.md</text>
+  
+  <!-- Right panel - Test cases -->
+  <rect x="660" y="390" width="560" height="200" rx="12" fill="#F8FAFC" filter="url(#cardShadow)"/>
+  <text x="700" y="430" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" font-weight="600" fill="#1E293B">生成内容（20 条用例）</text>
+  
+  <text x="700" y="470" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 5 种正常登录场景</text>
+  <text x="700" y="495" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 10 种异常场景（用户名/密码/组合）</text>
+  <text x="700" y="520" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• 5 种边界值测试</text>
+  <text x="700" y="545" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">• SQL 注入 / XSS 攻击测试</text>
+  
+  <!-- Footer -->
+  <rect x="0" y="680" width="1280" height="40" fill="#F8FAFC"/>
+  <text x="60" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">基于 LLM 协同辅助自动化测试</text>
+  <text x="1220" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8" text-anchor="end">5 / 11</text>
+</svg>

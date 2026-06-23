@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  
+  <!-- Header -->
+  <rect x="0" y="0" width="1280" height="80" fill="#F8FAFC"/>
+  <text x="60" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#94A3B8">09</text>
+  <text x="100" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" font-weight="700" fill="#1E293B">不足与改进</text>
+  
+  <!-- Content -->
+  <text x="60" y="130" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" fill="#64748B">当前限制与后续改进方向</text>
+  
+  <!-- Left panel - Current limitations -->
+  <rect x="60" y="170" width="560" height="440" rx="12" fill="#F8FAFC" filter="url(#cardShadow)"/>
+  <rect x="60" y="170" width="560" height="50" rx="12" fill="#DC2626" opacity="0.1"/>
+  <text x="340" y="202" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" font-weight="600" fill="#DC2626" text-anchor="middle">当前不足</text>
+  
+  <text x="100" y="260" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">1. 教学模拟页面</text>
+  <text x="120" y="285" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">登录页面没有连接真实后端数据库</text>
+  
+  <text x="100" y="325" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">2. 模型输出稳定性</text>
+  <text x="120" y="350" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">LLM 生成内容受模型质量影响</text>
+  
+  <text x="100" y="390" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">3. 测试规模有限</text>
+  <text x="120" y="415" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">目前仅覆盖登录功能测试</text>
+  
+  <text x="100" y="455" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">4. 未接入 CI/CD</text>
+  <text x="120" y="480" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">没有持续集成流程</text>
+  
+  <text x="100" y="520" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">5. 缺少用例评估机制</text>
+  <text x="120" y="545" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">没有去重和质量评分</text>
+  
+  <!-- Right panel - Improvements -->
+  <rect x="660" y="170" width="560" height="440" rx="12" fill="#F8FAFC" filter="url(#cardShadow)"/>
+  <rect x="660" y="170" width="560" height="50" rx="12" fill="#16A34A" opacity="0.1"/>
+  <text x="940" y="202" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" font-weight="600" fill="#16A34A" text-anchor="middle">改进方向</text>
+  
+  <text x="700" y="260" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">1. 接入真实后端接口</text>
+  <text x="720" y="285" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">连接数据库或 API，模拟真实场景</text>
+  
+  <text x="700" y="325" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">2. JSON Schema 约束输出</text>
+  <text x="720" y="350" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">使用更严格的输出格式约束</text>
+  
+  <text x="700" y="390" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">3. 扩展更多业务模块</text>
+  <text x="720" y="415" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">注册、表单、支付等功能测试</text>
+  
+  <text x="700" y="455" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">4. 接入 GitHub Actions</text>
+  <text x="720" y="480" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">实现自动化测试和分析</text>
+  
+  <text x="700" y="520" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">5. 增加用例去重和评分</text>
+  <text x="720" y="545" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">提高测试用例质量</text>
+  
+  <!-- Footer -->
+  <rect x="0" y="680" width="1280" height="40" fill="#F8FAFC"/>
+  <text x="60" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">基于 LLM 协同辅助自动化测试</text>
+  <text x="1220" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8" text-anchor="end">10 / 11</text>
+</svg>

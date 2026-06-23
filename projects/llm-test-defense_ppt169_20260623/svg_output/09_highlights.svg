@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <defs>
+    <filter id="cardShadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-opacity="0.08"/>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1280" height="720" fill="#FFFFFF"/>
+  
+  <!-- Header -->
+  <rect x="0" y="0" width="1280" height="80" fill="#F8FAFC"/>
+  <text x="60" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#94A3B8">08</text>
+  <text x="100" y="50" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="24" font-weight="700" fill="#1E293B">项目亮点</text>
+  
+  <!-- Content -->
+  <text x="60" y="130" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="16" fill="#64748B">四大核心亮点</text>
+  
+  <!-- Highlight cards -->
+  <!-- Card 1 -->
+  <rect x="60" y="170" width="560" height="200" rx="12" fill="#F8FAFC" filter="url(#cardShadow)"/>
+  <rect x="60" y="170" width="8" height="200" rx="4" fill="#0EA5E9"/>
+  <text x="100" y="220" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="18" font-weight="600" fill="#1E293B">🤖 LLM 辅助测试设计</text>
+  <text x="100" y="260" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">利用大模型快速生成多类型测试用例</text>
+  <text x="100" y="285" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">减少人工编写成本，提高测试设计效率</text>
+  <text x="100" y="310" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">通过固定输出格式和解析逻辑保证质量</text>
+  
+  <!-- Card 2 -->
+  <rect x="660" y="170" width="560" height="200" rx="12" fill="#F8FAFC" filter="url(#cardShadow)"/>
+  <rect x="660" y="170" width="8" height="200" rx="4" fill="#F59E0B"/>
+  <text x="700" y="220" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="18" font-weight="600" fill="#1E293B">🔄 自动化测试闭环</text>
+  <text x="700" y="260" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">从用例生成、测试执行、结果保存到可视化分析</text>
+  <text x="700" y="285" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">形成完整流程，非单纯调用大模型</text>
+  <text x="700" y="310" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">每个环节都有结构化数据输出</text>
+  
+  <!-- Card 3 -->
+  <rect x="60" y="390" width="560" height="200" rx="12" fill="#F8FAFC" filter="url(#cardShadow)"/>
+  <rect x="60" y="390" width="8" height="200" rx="4" fill="#8B5CF6"/>
+  <text x="100" y="440" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="18" font-weight="600" fill="#1E293B">🎯 教学演示友好</text>
+  <text x="100" y="480" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">通过 Gradio 提供统一界面</text>
+  <text x="100" y="505" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">降低操作门槛，无需命令行切换</text>
+  <text x="100" y="530" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">适合教学演示和小型项目使用</text>
+  
+  <!-- Card 4 -->
+  <rect x="660" y="390" width="560" height="200" rx="12" fill="#F8FAFC" filter="url(#cardShadow)"/>
+  <rect x="660" y="390" width="8" height="200" rx="4" fill="#16A34A"/>
+  <text x="700" y="440" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="18" font-weight="600" fill="#1E293B">📊 结果可追踪</text>
+  <text x="700" y="480" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">每条测试记录输入、状态、输出和耗时</text>
+  <text x="700" y="505" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">通过 pyecharts 可视化分析测试覆盖情况</text>
+  <text x="700" y="530" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="14" fill="#64748B">帮助发现测试分布是否均衡</text>
+  
+  <!-- Footer -->
+  <rect x="0" y="680" width="1280" height="40" fill="#F8FAFC"/>
+  <text x="60" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8">基于 LLM 协同辅助自动化测试</text>
+  <text x="1220" y="705" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="12" fill="#94A3B8" text-anchor="end">9 / 11</text>
+</svg>
